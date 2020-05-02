@@ -1,6 +1,7 @@
-#include "driver.hh"
-#include "parser.hh"
-#include "Visitor/PrintAST.h"
+#include <driver.hh>
+#include <parser.hh>
+#include <Visitor/PrintAST.h>
+#include <Visitor/Executor.h>
 
 Driver::Driver() :
     trace_parsing(false),
@@ -40,5 +41,10 @@ void Driver::scan_end()
 void Driver::PrintAST(const std::string& filename) {
   Visitor::PrintAST printer(filename);
   printer.Run(program);
+}
+
+int Driver::Run() {
+  Visitor::Executor interpreter;
+  return interpreter.Run(program);
 }
 

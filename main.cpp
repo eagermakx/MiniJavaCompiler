@@ -1,6 +1,8 @@
 #include <iostream>
 #include <driver.hh>
 
+// Config to print ast : ../java_examples/if_else.java --ast ../TestOutput/if_else.dot
+
 int main(int argc, char** argv) {
     int result = 0;
     Driver driver;
@@ -15,6 +17,10 @@ int main(int argc, char** argv) {
             ++i;
         } else if (!driver.parse(argv[i])) {
             std::cout << "[*] Parsed successfully (returned " << driver.result << ")" << std::endl;
+            std::cout << "[*] Running... " << std::endl;
+            
+            int ret_value = driver.Run();
+            std::cout << "Process finished with exit code " << ret_value << std::endl;
         } else {
             result = 1;
         }

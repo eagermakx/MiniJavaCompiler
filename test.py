@@ -47,5 +47,9 @@ def usage():
 	print ("\tUsage: test.py\n")
 
 if __name__ == "__main__":
-	path = output_dir
+	if len(sys.argv) > 1:
+		path = sys.argv[1]
+	else:
+		path = output_dir
+		
 	main(path)
