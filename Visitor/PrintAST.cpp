@@ -11,7 +11,7 @@ Visitor::PrintAST::PrintAST(const std::string &filename) {
 }
 
 void Visitor::PrintAST::GraphPrologue() {
-  const char* prologue = "digraph nfa {"
+  const char* prologue = "digraph AST {"
                          "\tnode [ shape = rectangle ];"
                          "\tgraph [ dpi = 300 ];";
   stream_ << prologue;
