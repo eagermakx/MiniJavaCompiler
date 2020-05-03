@@ -32,6 +32,7 @@ class Executor : public Visitor::Base {
   void Visit(Stmt::Ret *that) override;
   void Visit(Stmt::List *that) override;
   void Visit(Stmt::VarDecl *that) override;
+  void Visit(Stmt::ScopedList* scoped_list) override;
  
  private:
   std::unordered_map<std::string, int> vars_{};

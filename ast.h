@@ -21,6 +21,7 @@
 #include "Expr/rvalue.h"
 
 #include "Stmt/List.h"
+#include "Stmt/ScopedList.h"
 #include "Stmt/Print.h"
 #include "Stmt/Assign.h"
 #include "Stmt/Ret.h"

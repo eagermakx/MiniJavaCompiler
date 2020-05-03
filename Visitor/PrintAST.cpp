@@ -195,6 +195,10 @@ int Visitor::PrintAST::CreateNodeAndLink(const std::string &label) {
   return node;
 }
 
+void Visitor::PrintAST::Visit(Stmt::ScopedList *scoped_list) {
+  Visit(scoped_list->list);
+}
+
 
 
 

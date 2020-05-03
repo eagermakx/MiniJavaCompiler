@@ -105,4 +105,8 @@ void Executor::Visit(Expr::UnaryOp *that) {
   temp_register_ = that->op(res);
 }
 
+void Executor::Visit(Stmt::ScopedList *scoped_list) {
+  Visit(scoped_list->list);
+}
+
 } // namespace Visitor

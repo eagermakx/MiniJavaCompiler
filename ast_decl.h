@@ -28,4 +28,5 @@ namespace Stmt {
   class Ret;
   class VarDecl;
   class List;
+  class ScopedList;
 }

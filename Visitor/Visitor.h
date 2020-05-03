@@ -22,5 +22,6 @@ namespace Visitor {
     virtual void Visit(Stmt::Ret* ret) = 0;
     virtual void Visit(Stmt::List* list) = 0;
     virtual void Visit(Stmt::VarDecl* var_decl) = 0;
+    virtual void Visit(Stmt::ScopedList* scoped_list) = 0;
   };
 }
