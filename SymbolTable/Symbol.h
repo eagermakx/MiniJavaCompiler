@@ -4,7 +4,6 @@
 #include <unordered_map>
 #include <memory>
 
-
 class Symbol {
  public:
   explicit Symbol(std::string name);
