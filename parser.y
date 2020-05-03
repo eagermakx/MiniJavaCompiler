@@ -121,7 +121,7 @@ statement:
     | var_decl { $$ = $1; }
     | lvalue "=" expression ";" { $$ = new Stmt::Assign($1, $3); };
     | "return" expression ";" { $$ = new Stmt::Ret($2); }
-    | "{" statements "}" { $$ = $2; };
+    | "{" statements "}" { $$ = new Stmt::ScopedList($2); };
     | if_else_stmt { $$ = $1; }
 
 if_else_stmt:

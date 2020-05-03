@@ -39,7 +39,8 @@ void Executor::Visit(Stmt::Assign *that) {
   
   // .at() function throws `out_of_range` exception
   // when passed a non-existing key, just how we want it
-  vars_.at(id) = temp_register_;
+  
+  Assign(that->lvalue->id->identifier, result);
 }
 
 void Executor::Visit(Stmt::Cond *that) {
@@ -48,7 +49,9 @@ void Executor::Visit(Stmt::Cond *that) {
   if (condition) {
     that->stmt_true->Accept(this);
   } else {
-    that->stmt_false->Accept(this);
+    if (that->stmt_false) {
+      that->stmt_false->Accept(this);
+    }
   }
 }
 
@@ -70,7 +73,7 @@ void Executor::Visit(Stmt::List *that) {
 }
 
 void Executor::Visit(Stmt::VarDecl *that) {
-  vars_.insert({that->ident->identifier, 0});
+  Decl(that->ident->identifier);
 }
 
 void Executor::Visit(Entity::Const *that) {
@@ -78,11 +81,11 @@ void Executor::Visit(Entity::Const *that) {
 }
 
 void Executor::Visit(Entity::Id *that) {
-  temp_register_ = vars_.at(that->identifier);
+  temp_register_ = Value(that->identifier);
 }
 
 void Executor::Visit(Expr::lvalue *that) {
-  temp_register_ = vars_.at(that->id->identifier);
+  temp_register_ = Value(that->id->identifier);
 }
 
 void Executor::Visit(Expr::rvalue *that) {
@@ -107,6 +110,31 @@ void Executor::Visit(Expr::UnaryOp *that) {
 
 void Executor::Visit(Stmt::ScopedList *scoped_list) {
   Visit(scoped_list->list);
+}
+
+void Executor::Assign(const std::string &var, int value) {
+  try {
+    vars_.at(var) = value;
+  } catch (std::out_of_range& e) {
+    std::cerr << "[!] Assignment to undeclared variable";
+    exit(1);
+  }
+}
+
+void Executor::Decl(const std::string &var) {
+  vars_.insert({var, 0});
+}
+
+int Executor::Value(const std::string &var) {
+  int res = 0;
+  try {
+    res = vars_.at(var);
+  } catch (std::out_of_range& e) {
+    std::cerr << "[!] Accessing undeclared variable";
+    exit(1);
+  }
+  
+  return res;
 }
 
 } // namespace Visitor

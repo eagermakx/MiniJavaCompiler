@@ -19,6 +19,11 @@ class Executor : public Visitor::Base {
   
   int CalcExpr(Expr::Base* expr);
   
+  // Variables
+  void Assign(const std::string& var, int value);
+  void Decl(const std::string& var);
+  int Value(const std::string& var);
+  
   void Visit(Program *program) override;
   void Visit(Entity::Const *that) override;
   void Visit(Entity::Id *that) override;
