@@ -11,10 +11,12 @@
 
 class ScopeTree;
 
+using ScopeId = size_t;
+
 class Scope {
  public:
   explicit Scope(Scope* parent);
-  explicit Scope(ScopeTree& tree);
+  Scope() = default;
  
   bool Exists(const std::string&) const;
   void Set(const std::string&, std::shared_ptr<Object>);
@@ -29,14 +31,18 @@ class Scope {
   const char* Label() const;
   void SetLabel(const char* new_label);
   
+  ScopeId GetId() const;
+ 
+ public:
+  std::vector<std::string> variables_;
+  
  private:
+  ScopeId id_;
+  
   Scope* parent_{nullptr};
   std::vector<Scope*> children_;
   
-  ScopeTree& tree_;
-  
   std::unordered_map<std::string, std::shared_ptr<Object>> variable_value_;
   std::unordered_map<std::string, size_t> offset_;
-  std::vector<std::string> variables_;
   std::string layer_label_;
 };

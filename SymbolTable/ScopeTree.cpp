@@ -12,7 +12,7 @@ void ScopeTree::DefineVariable(Scope *layer, const std::string& variable) {
   }
   
   layer->DefineVariable(variable);
-  scope_shadowing_map_[variable].push(layer);
+  scope_shadowing_map_.at(variable).push(layer);
 }
 
 Scope *ScopeTree::TopDefinitionLayer(const std::string& variable) {
@@ -20,9 +20,10 @@ Scope *ScopeTree::TopDefinitionLayer(const std::string& variable) {
     ERROR("Undefined variable", "ScopeLayerTree::TopDefinitionLayer");
   }
   
-  return scope_shadowing_map_[variable].top();
+  return scope_shadowing_map_.at(variable).top();
 }
 
 bool ScopeTree::VariableDefined(const std::string& variable) {
-  return scope_shadowing_map_.find(variable) != scope_shadowing_map_.end();
+  return scope_shadowing_map_.find(variable) != scope_shadowing_map_.end()
+         && !scope_shadowing_map_.at(variable).empty();
 }

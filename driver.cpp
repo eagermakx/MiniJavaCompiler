@@ -13,13 +13,17 @@ Driver::Driver() :
 }
 
 
-int Driver::parse(const std::string& f) {
+int Driver::Parse(const std::string& f) {
     file = f;
     location.initialize(&file);
     scan_begin();
     parser.set_debug_level(trace_parsing);
     int res = parser();
     scan_end();
+  
+    Visitor::SymbolTableBuilder symtable_builder;
+    symtable_builder.Process(program);
+    
     return res;
 }
 
@@ -40,9 +44,6 @@ void Driver::scan_end()
 }
 
 void Driver::PrintAST(const std::string& filename) {
-  Visitor::SymbolTableBuilder symtable_builder;
-  symtable_builder.Process(program);
-  
   Visitor::PrintAST printer(filename);
   printer.Run(program);
 }

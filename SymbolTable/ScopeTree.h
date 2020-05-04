@@ -18,7 +18,7 @@ class ScopeTree {
   Scope* TopDefinitionLayer(const std::string& variable);
   
   Scope* root;
- private:
+
   bool VariableDefined(const std::string& variable);
   
   std::unordered_map<std::string, std::stack<Scope*>> scope_shadowing_map_;

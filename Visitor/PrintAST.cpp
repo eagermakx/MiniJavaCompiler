@@ -204,7 +204,10 @@ int Visitor::PrintAST::CreateNodeAndLink(const std::string &label) {
 }
 
 void Visitor::PrintAST::Visit(Stmt::ScopedList *scoped_list) {
-  Visit(scoped_list->list);
+  int node = CreateNodeAndLink("ScopedList");
+  PushNode(node);
+  scoped_list->list->Accept(this);
+  PopNode();
 }
 
 

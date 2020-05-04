@@ -6,6 +6,7 @@
 
 #include "Visitor.h"
 #include "ast_decl.h"
+#include "SymbolTable/Symbol.h"
 
 #include <unordered_map>
 
@@ -20,9 +21,9 @@ class Executor : public Visitor::Base {
   int CalcExpr(Expr::Base* expr);
   
   // Variables
-  void Assign(const std::string& var, int value);
-  void Decl(const std::string& var);
-  int Value(const std::string& var);
+  void Assign(Symbol* var, int value);
+  void Decl(Symbol* var);
+  int Value(Symbol* var);
   
   void Visit(Program *program) override;
   void Visit(Entity::Const *that) override;

@@ -9,4 +9,7 @@ class BaseNode {
  public:
   virtual void Accept(Visitor::Base* visitor) = 0;
   virtual ~BaseNode() = default;
+ 
+ public:
+  int line_no{0};
 };

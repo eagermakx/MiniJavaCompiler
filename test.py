@@ -3,7 +3,7 @@
 import os
 import sys
 
-tests = ['2+2', '2+2_var', 'if_else', 'interactive', 'println']
+tests = ['2+2', '2+2_var', 'if_else', 'interactive', 'println', 'scopes', 'local_scope']
 
 def java_file(test):
 	return test_id + '.java'
@@ -17,7 +17,7 @@ def png_file(test):
 output_dir = "TestOutput"
 
 executable = './bin/MiniJavaCompiler'
-parse_command = "{executable} ./java_examples/{test}.java --ast ./{dir}/{test}.dot"
+parse_command = "{executable} ./JavaExamples/{test}.java --ast ./{dir}/{test}.dot"
 render_image_command = "dot -Tpng ./{dir}/{test}.dot -o {dir}/{test}.png"
 
 def parse_cmd(test):
@@ -47,9 +47,6 @@ def usage():
 	print ("\tUsage: test.py\n")
 
 if __name__ == "__main__":
-	if len(sys.argv) > 1:
-		path = sys.argv[1]
-	else:
-		path = output_dir
+	path = output_dir
 		
 	main(path)

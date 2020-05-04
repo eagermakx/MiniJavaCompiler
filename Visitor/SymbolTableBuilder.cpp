@@ -17,6 +17,7 @@ void Visitor::SymbolTableBuilder::Process(Program *program) {
 
 void Visitor::SymbolTableBuilder::Visit(Program *program) {
   auto* global = new Scope(nullptr);
+  global->SetLabel("main");
   auto* main = new ScopeTree(global);
   trees_.emplace_back(main);
   current_tree_ = main;
@@ -24,6 +25,8 @@ void Visitor::SymbolTableBuilder::Visit(Program *program) {
   scopes_.push(global);
   
   Visit(program->list);
+  
+  scopes_.pop();
 }
 
 void Visitor::SymbolTableBuilder::Visit(Stmt::ScopedList *scoped_list) {
@@ -32,8 +35,17 @@ void Visitor::SymbolTableBuilder::Visit(Stmt::ScopedList *scoped_list) {
   current_layer->AddChild(new_layer);
   
   scopes_.push(new_layer);
+  
+  // LOG("Pushed a scope! id = " << new_layer->GetId());
+  
   Visit(scoped_list->list);
+  
+  for (auto& var : scopes_.top()->variables_) {
+    current_tree_->scope_shadowing_map_.at(var).pop();
+  }
   scopes_.pop();
+  
+  // LOG("Popped a scope! current id = " << scopes_.top()->GetId());
 }
 
 void Visitor::SymbolTableBuilder::Visit(Stmt::List *list) {
@@ -115,5 +127,8 @@ void Visitor::SymbolTableBuilder::FindDefinition(Entity::Id *id) {
   // If was not found, terminates
   Scope* def_scope = current_tree_->TopDefinitionLayer(var);
   id->symbol = new Symbol(def_scope, var);
+  
+  // LOG("Found definition for \'" << id->symbol->GetName() << "\' at layer" << scopes_.top()->GetId());
+  // LOG("Stack size = " << current_tree_->scope_shadowing_map_.at(var).size());
 }
 

@@ -6,10 +6,12 @@
 #include "error.h"
 #include "Object/UninitObject.h"
 
-Scope::Scope(Scope *parent) : parent_(parent), tree_(parent->tree_) {
+ScopeId GenerateId() {
+  static ScopeId current_id = 0;
+  return current_id++;
 }
 
-Scope::Scope(ScopeTree& tree) : tree_(tree) {
+Scope::Scope(Scope *parent) : parent_(parent), id_(GenerateId()) {
 }
 
 bool Scope::Exists(const std::string& variable) const {
@@ -60,4 +62,9 @@ const char* Scope::Label() const {
 void Scope::SetLabel(const char* new_label) {
   layer_label_ = new_label;
 }
+
+ScopeId Scope::GetId() const {
+  return id_;
+}
+
 

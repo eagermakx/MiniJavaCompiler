@@ -13,6 +13,7 @@
 
 %option c++
 %option yyclass="Scanner"
+%option yylineno
 
 %{
   // A number symbol corresponding to the value in S.
@@ -57,7 +58,7 @@ blank [ \t\r]
 "return"   return yy::parser::make_kw_return    (loc);
 "if"       return yy::parser::make_kw_if        (loc);
 "else"     return yy::parser::make_kw_else      (loc);
-"while"    return yy::parser::make_kw_while        (loc);
+"while"    return yy::parser::make_kw_while     (loc);
 
 "."        return yy::parser::make_op_member    (loc);
 "+"        return yy::parser::make_op_add       (loc);

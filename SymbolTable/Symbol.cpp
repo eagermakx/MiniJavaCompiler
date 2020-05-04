@@ -2,13 +2,8 @@
 
 #include <iostream>
 
-Symbol::SymbolId GenerateId() {
-  static Symbol::SymbolId current_id = 0;
-  return current_id++;
-}
-
-Symbol::Symbol(Scope* scope, std::string name) : parent_scope_(scope), id_(GenerateId()) {
-  name_ = std::to_string(id_) + "_" + scope->Label() + "::" + name;
+Symbol::Symbol(Scope* scope, std::string name) : parent_scope_(scope) {
+  name_ = std::to_string(parent_scope_->GetId()) + "_" + scope->Label() + "::" + name;
 }
 
 // Symbol::Symbol(const Symbol& symbol): name_(symbol.name_) {}

@@ -19,7 +19,6 @@ class Symbol {
   
  private:
   Scope* parent_scope_;
-  SymbolId id_;
   std::string name_;
 };
 

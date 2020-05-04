@@ -156,7 +156,7 @@ var_decl:
     type id ";" { $$ = new Stmt::VarDecl($2); };
 
 id:
-    "identifier" { $$ = new Entity::Id($1); };
+    "identifier" { $$ = new Entity::Id($1);};
 
 literal:
     "number" { $$ = new Entity::Const($1); }

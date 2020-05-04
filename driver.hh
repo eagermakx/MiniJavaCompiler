@@ -12,7 +12,7 @@ class Driver {
     Driver();
     std::map<std::string, int> variables;
     int result;
-    int parse(const std::string& f);
+    int Parse(const std::string& f);
     std::string file;
     bool trace_parsing;
 
