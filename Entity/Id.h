@@ -6,6 +6,7 @@
 
 #include "Entity.h"
 #include <string>
+#include "SymbolTable/Symbol.h"
 
 namespace Entity {
   class Id : public Base {
@@ -16,5 +17,6 @@ namespace Entity {
    
    public:
     std::string identifier;
+    Symbol* symbol{nullptr};
   };
 }

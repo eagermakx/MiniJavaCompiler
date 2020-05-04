@@ -4,4 +4,5 @@
 
 #pragma once
 
+#include <iostream>
 #define UNREACHABLE(x) std::cerr << "[!] Unreachable code area : " << x << std::endl; exit(1);

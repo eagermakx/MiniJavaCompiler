@@ -4,7 +4,26 @@
 
 #pragma once
 
-class Table {
+#include "Scope.h"
+#include "ScopeTree.h"
+#include "Symbol.h"
 
+#include <unordered_map>
+
+class Table {
+ public:
+  class SymbolInfo {
+    off_t offset;
+    int type;
+  };
+  
+ public:
+  Table() = default;
+  
+ private:
+  ScopeTree* tree_;
+  
+  std::vector<Symbol> symbols_;
+  std::unordered_map<Symbol, SymbolInfo> hash_map_;
 };
 

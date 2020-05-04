@@ -2,6 +2,7 @@
 #include <parser.hh>
 #include <Visitor/PrintAST.h>
 #include <Visitor/Executor.h>
+#include <Visitor/SymbolTableBuilder.h>
 
 Driver::Driver() :
     trace_parsing(false),
@@ -39,6 +40,9 @@ void Driver::scan_end()
 }
 
 void Driver::PrintAST(const std::string& filename) {
+  Visitor::SymbolTableBuilder symtable_builder;
+  symtable_builder.Process(program);
+  
   Visitor::PrintAST printer(filename);
   printer.Run(program);
 }

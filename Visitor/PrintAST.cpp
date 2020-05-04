@@ -58,7 +58,15 @@ void Visitor::PrintAST::Visit(Entity::Const *that) {
 }
 
 void Visitor::PrintAST::Visit(Entity::Id *that) {
-  CreateNodeAndLink(that->identifier);
+  std::string label;
+  
+  if (that->symbol) {
+    label = that->symbol->GetName();
+  } else {
+    label = "[!] " + that->identifier;
+  }
+  
+  CreateNodeAndLink(label);
 }
 
 std::string Repr(Expr::BinOperationType type) {

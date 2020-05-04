@@ -3,17 +3,23 @@
 #include <string>
 #include <unordered_map>
 #include <memory>
+#include "SymbolTable/Scope.h"
 
 class Symbol {
  public:
-  explicit Symbol(std::string name);
-  Symbol(const Symbol& other) = default;
+  using SymbolId = uint64_t;
+  
+ public:
+  explicit Symbol(Scope* scope, std::string name);
   
   bool operator==(const Symbol& other) const;
   bool operator!=(const Symbol& other) const;
-  std::string GetName() const;
+  
+  const char* GetName() const;
   
  private:
+  Scope* parent_scope_;
+  SymbolId id_;
   std::string name_;
 };
 

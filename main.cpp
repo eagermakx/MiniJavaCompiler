@@ -1,5 +1,6 @@
 #include <iostream>
 #include <driver.hh>
+#include "SymbolTable/Symbol.h"
 
 // Config to print ast : ../java_examples/if_else.java --ast ../TestOutput/if_else.dot
 
