@@ -31,18 +31,22 @@ void Visitor::SymbolTableBuilder::Visit(Program *program) {
 
 void Visitor::SymbolTableBuilder::Visit(Stmt::ScopedList *scoped_list) {
   Scope* current_layer = scopes_.top();
-  auto* new_layer = new Scope(current_layer);
-  current_layer->AddChild(new_layer);
   
-  scopes_.push(new_layer);
+  auto* new_scope = new Scope(current_layer);
+  scoped_list->scope = new_scope;
   
-  // LOG("Pushed a scope! id = " << new_layer->GetId());
+  current_layer->AddChild(new_scope);
+  
+  scopes_.push(new_scope);
+  
+  // LOG("Pushed a scope! id = " << new_scope->GetId());
   
   Visit(scoped_list->list);
   
   for (auto& var : scopes_.top()->variables_) {
     current_tree_->scope_shadowing_map_.at(var).pop();
   }
+  
   scopes_.pop();
   
   // LOG("Popped a scope! current id = " << scopes_.top()->GetId());

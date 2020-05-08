@@ -41,6 +41,9 @@ class Executor : public Visitor::Base {
   void Visit(Stmt::ScopedList* scoped_list) override;
  
  private:
+ 
+ 
+ private:
   std::unordered_map<std::string, int> vars_{};
   int return_value_{0};
   int temp_register_{0};

@@ -7,6 +7,8 @@
 #include <vector>
 #include "Stmt.h"
 
+class Scope;
+
 namespace Stmt {
 
 class ScopedList : public Stmt::Base {
@@ -17,6 +19,7 @@ class ScopedList : public Stmt::Base {
  
  public:
   Stmt::List *list;
+  Scope* scope;
 };
 
 } // namespace Stmt

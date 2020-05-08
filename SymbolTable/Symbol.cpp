@@ -3,19 +3,19 @@
 #include <iostream>
 
 Symbol::Symbol(Scope* scope, std::string name) : parent_scope_(scope) {
-  name_ = std::to_string(parent_scope_->GetId()) + "_" + scope->Label() + "::" + name;
+  label_ = std::to_string(parent_scope_->GetId()) + "_" + scope->Label() + "::" + name;
 }
 
 // Symbol::Symbol(const Symbol& symbol): name_(symbol.name_) {}
 
 bool Symbol::operator==(const Symbol& other) const {
-  return name_ == other.name_;
+  return label_ == other.label_;
 }
 
 bool Symbol::operator!=(const Symbol& other) const {
-  return name_ != other.name_;
+  return label_ != other.label_;
 }
 
 const char* Symbol::GetName() const {
-  return name_.c_str();
+  return label_.c_str();
 }

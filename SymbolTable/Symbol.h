@@ -19,7 +19,7 @@ class Symbol {
   
  private:
   Scope* parent_scope_;
-  std::string name_;
+  std::string label_;
 };
 
 namespace std {
