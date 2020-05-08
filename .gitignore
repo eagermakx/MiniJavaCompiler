@@ -3,3 +3,7 @@
 *cmake-build-debug*
 *TestOutput*
 bin
+scanner.cpp
+parser.hh
+parser.cpp
+location.hh
