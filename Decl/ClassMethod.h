@@ -9,6 +9,8 @@
 
 #include <string>
 
+class Class;
+
 class ClassMethod : public Decl::Base {
  public:
   ClassMethod(Type* out, std::string name, FuncParamList* params, Stmt::List* list, bool is_static = false);
@@ -16,11 +18,9 @@ class ClassMethod : public Decl::Base {
   void Accept(Visitor::Base *visitor) override;
  
  public:
-  std::string name;
-  
   Type* out;
+  std::string name;
   std::vector<FuncParameter> parameters;
-  
   Stmt::List* statements;
   
   bool is_static{false};

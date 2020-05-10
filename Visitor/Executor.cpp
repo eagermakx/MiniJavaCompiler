@@ -117,9 +117,9 @@ void Executor::Visit(Expr::UnaryOp *that) {
 void Executor::Visit(Stmt::ScopedList *scoped_list) {
   Visit(scoped_list->list);
   
-  for (auto& var : scoped_list->scope->variables_) {
+  /*for (auto& var : scoped_list->scope->variables_) {
     // TODO: clear of unused symbols
-  }
+  }*/
 }
 
 void Executor::Assign(Symbol* var, int value) {

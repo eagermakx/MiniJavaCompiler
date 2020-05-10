@@ -38,11 +38,11 @@ void Visitor::SymbolTableBuilder::Visit(Stmt::ScopedList *scoped_list) {
   auto* new_scope = new Scope(current_layer);
   scoped_list->scope = new_scope;
   
-  current_layer->AddChild(new_scope);
+  // current_layer->AddChild(new_scope);
   
   scopes_.push(new_scope);
   
-  // LOG("Pushed a scope! id = " << new_scope->GetId());
+  LOG("Pushed a scope! id = " << new_scope->GetId());
   
   Visit(scoped_list->list);
   
@@ -52,7 +52,7 @@ void Visitor::SymbolTableBuilder::Visit(Stmt::ScopedList *scoped_list) {
   
   scopes_.pop();
   
-  // LOG("Popped a scope! current id = " << scopes_.top()->GetId());
+  LOG("Popped a scope! current id = " << scopes_.top()->GetId());
 }
 
 void Visitor::SymbolTableBuilder::Visit(Stmt::List *list) {
@@ -134,8 +134,8 @@ void Visitor::SymbolTableBuilder::FindDefinition(Expr::Id *id) {
   Scope* def_scope = current_tree_->TopDefinitionLayer(var);
   id->symbol.Reset(def_scope, var);
   
-  // LOG("Found definition for \'" << id->symbol->GetName() << "\' at layer" << scopes_.top()->GetId());
-  // LOG("Stack size = " << current_tree_->scope_shadowing_map_.at(var).size());
+  LOG("Found definition for \'" << id->symbol.GetName() << "\' at layer" << scopes_.top()->GetId());
+  LOG("Stack size = " << current_tree_->scope_shadowing_map_.at(var).size());
 }
 
 void Visitor::SymbolTableBuilder::Visit(Class *class_decl) {

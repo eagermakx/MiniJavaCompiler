@@ -28,3 +28,11 @@ void Symbol::Reset(Scope *scope, std::string name) {
 Scope *Symbol::GetParentScope() const {
   return parent_scope_;
 }
+
+void Symbol::AssignLabel(std::string new_label) {
+  label_ = std::move(new_label);
+}
+
+const char* Symbol::GetLabel() {
+  return label_.c_str();
+}

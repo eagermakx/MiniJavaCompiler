@@ -33,6 +33,9 @@ class Symbol {
   const char* GetName() const;
   Scope* GetParentScope() const;
   
+  void AssignLabel(std::string new_label);
+  const char* GetLabel();
+  
  private:
   Scope* parent_scope_{nullptr};
   std::string label_;

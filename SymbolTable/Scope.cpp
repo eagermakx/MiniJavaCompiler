@@ -15,23 +15,7 @@ Scope::Scope(Scope *parent) : parent_(parent), id_(GenerateId()) {
 }
 
 bool Scope::Exists(const std::string& variable) const {
-  return variable_value_.find(variable) != variable_value_.end();
-}
-
-void Scope::Set(const std::string& variable, std::shared_ptr<Object> object) {
-  if (!Exists(variable)) {
-    ERROR("Assignment to undefined variable", "Scope::Set");
-  }
-  
-  variable_value_[variable] = std::move(object);
-}
-
-std::shared_ptr<Object> Scope::Get(const std::string &variable) const {
-  if (!Exists(variable)) {
-    ERROR("Access to undefined variable", "Scope::Get");
-  }
-  
-  return variable_value_.at(variable);
+  return existing_variables_.find(variable) != existing_variables_.end();
 }
 
 void Scope::DefineVariable(const std::string &variable) {
@@ -39,20 +23,8 @@ void Scope::DefineVariable(const std::string &variable) {
     ERROR("Redefenition of existing variable", "Scope::Declare");
   }
   
-  variable_value_.insert({variable, std::make_shared<UninitObject>()});
+  existing_variables_.insert(variable);
   variables_.push_back(variable);
-}
-
-void Scope::AddChild(Scope *child) {
-  children_.push_back(child);
-}
-
-Scope *Scope::GetChild(size_t index) const {
-  return children_[index];
-}
-
-Scope *Scope::GetParent() const {
-  return parent_;
 }
 
 const char* Scope::Label() const {
