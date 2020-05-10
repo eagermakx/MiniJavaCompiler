@@ -59,6 +59,7 @@ blank [ \t\r]
 "if"       return yy::parser::make_kw_if        (loc);
 "else"     return yy::parser::make_kw_else      (loc);
 "while"    return yy::parser::make_kw_while     (loc);
+"this"     return yy::parser::make_kw_this      (loc);
 
 "."        return yy::parser::make_op_member    (loc);
 "+"        return yy::parser::make_op_add       (loc);

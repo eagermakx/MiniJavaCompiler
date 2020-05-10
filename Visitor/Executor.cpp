@@ -7,12 +7,12 @@
 #include <Stmt/Cond.h>
 #include <Stmt/Print.h>
 #include <Visitor/Executor.h>
-
-#include <iostream>
 #include <Stmt/Ret.h>
-
 #include <ast.h>
 #include <log.h>
+
+#include <iostream>
+#include <Decl/MainClass.h>
 
 namespace Visitor {
 
@@ -22,7 +22,9 @@ int Executor::Run(Program *program) {
 }
 
 void Executor::Visit(Program *program) {
-  program->list->Accept(this);
+  auto* main = program->main_class->GetMainFunction();
+  
+  main->statements->Accept(this);
 }
 
 int Executor::CalcExpr(Expr::Base *expr) {
@@ -32,15 +34,15 @@ int Executor::CalcExpr(Expr::Base *expr) {
 }
 
 void Executor::Visit(Stmt::Assign *that) {
-  std::string& id = that->lvalue->id->identifier;
+  std::string& id = that->lhs->identifier;
   
   // Calc expression, store it into the variable
-  int result = CalcExpr(that->expr);
+  int result = CalcExpr(that->rhs);
   
   // .at() function throws `out_of_range` exception
   // when passed a non-existing key, just how we want it
   
-  Assign(that->lvalue->id->symbol, result);
+  Assign(&that->lhs->symbol, result);
 }
 
 void Executor::Visit(Stmt::Cond *that) {
@@ -73,18 +75,22 @@ void Executor::Visit(Stmt::List *that) {
 }
 
 void Executor::Visit(Stmt::VarDecl *that) {
-  Decl(that->ident->symbol);
+  Decl(&that->symbol);
 }
 
-void Executor::Visit(Entity::Const *that) {
+void Executor::Visit(Expr::Const *that) {
   temp_register_ = that->value;
 }
 
-void Executor::Visit(Entity::Id *that) {
-  temp_register_ = Value(that->symbol);
+void Executor::Visit(Expr::Id *that) {
+  temp_register_ = Value(&that->symbol);
 }
 
-void Executor::Visit(Expr::lvalue *that) {
+void Executor::Visit(Expr::This *this_expr) {
+
+}
+
+/*void Executor::Visit(Expr::lvalue *that) {
   temp_register_ = Value(that->id->symbol);
 }
 
@@ -94,7 +100,7 @@ void Executor::Visit(Expr::rvalue *that) {
   } else if (that->type == Expr::rvalue::Type::ident) {
     Visit(that->id);
   }
-}
+}*/
 
 void Executor::Visit(Expr::BinaryOp *that) {
   int lhs = CalcExpr(that->left);
@@ -139,6 +145,22 @@ int Executor::Value(Symbol* var) {
   }
   
   return res;
+}
+
+void Executor::Visit(Class *class_decl) {
+
+}
+
+void Executor::Visit(ClassMethod *method) {
+
+}
+
+void Executor::Visit(ClassField *field) {
+
+}
+
+void Executor::Visit(ProgramBody *body) {
+
 }
 
 } // namespace Visitor

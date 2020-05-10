@@ -1,14 +1,22 @@
 //
-// Created by Igor Maximov on 03.04.2020.
+// Created by Igor Maximov on 09.05.2020.
 //
 
 #pragma once
 
-template <typename T>
-class Type {
- public:
-  typedef T internal;
-};
+class Void;
+class Int;
+class Bool;
 
-using Integer = Type<int>;
-using Boolean = Type<bool>;
+struct Type {
+  enum class PossibleTypes {
+    Int,
+    Bool,
+    Void,
+    UserClass
+  };
+  
+  explicit Type(PossibleTypes type) : type(type) {}
+  
+  PossibleTypes type;
+};

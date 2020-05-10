@@ -5,6 +5,9 @@
 #include "ast.h"
 #include "PrintAST.h"
 
+#include <iostream>
+#include <Decl/MainClass.h>
+
 Visitor::PrintAST::PrintAST(const std::string &filename) {
   stream_.open(filename, std::ios_base::out);
   GraphPrologue();
@@ -48,23 +51,23 @@ void Visitor::PrintAST::Visit(Program *program) {
   PrintNode(node, "Program");
   
   PushNode(node);
-  program->list->Accept(this);
+  
+  auto* main = program->main_class->GetMainFunction();
+  main->statements->Accept(this);
+  
   PopNode();
 }
 
 
-void Visitor::PrintAST::Visit(Entity::Const *that) {
+void Visitor::PrintAST::Visit(Expr::Const *that) {
   CreateNodeAndLink(std::to_string(that->value));
 }
 
-void Visitor::PrintAST::Visit(Entity::Id *that) {
+void Visitor::PrintAST::Visit(Expr::Id *that) {
   std::string label;
   
-  if (that->symbol) {
-    label = that->symbol->GetName();
-  } else {
-    label = "[!] " + that->identifier;
-  }
+  label = that->symbol.GetName();
+  std::cout << " :::: " << label << std::endl;
   
   CreateNodeAndLink(label);
 }
@@ -100,7 +103,7 @@ void Visitor::PrintAST::Visit(Expr::BinaryOp *that) {
   PopNode();
 }
 
-void Visitor::PrintAST::Visit(Expr::lvalue *that) {
+/*void Visitor::PrintAST::Visit(Expr::lvalue *that) {
   int node = CreateNodeAndLink("lvalue");
   
   PushNode(node);
@@ -119,7 +122,7 @@ void Visitor::PrintAST::Visit(Expr::rvalue *that) {
     that->literal->Accept(this);
   }
   PopNode();
-}
+}*/
 
 void Visitor::PrintAST::Visit(Expr::UnaryOp *that) {
   int node = CreateNodeAndLink(Repr(that->type));
@@ -133,8 +136,14 @@ void Visitor::PrintAST::Visit(Stmt::Assign *that) {
   int node = CreateNodeAndLink("=");
   
   PushNode(node);
-  that->lvalue->Accept(this);
-  that->expr->Accept(this);
+  /*that->lvalue->Accept(this);
+  that->expr->Accept(this);*/
+  
+  // std::cout << "...." << that->lhs->symbol.GetName() << std::endl;
+  
+  that->lhs->Accept(this);
+  that->rhs->Accept(this);
+  
   PopNode();
 }
 
@@ -179,7 +188,7 @@ void Visitor::PrintAST::Visit(Stmt::List *that) {
 void Visitor::PrintAST::Visit(Stmt::VarDecl *that) {
   int node = CreateNodeAndLink("VarDecl");
   PushNode(node);
-  that->ident->Accept(this);
+  that->var_id->Accept(this);
   PopNode();
 }
 
@@ -208,6 +217,26 @@ void Visitor::PrintAST::Visit(Stmt::ScopedList *scoped_list) {
   PushNode(node);
   scoped_list->list->Accept(this);
   PopNode();
+}
+
+void Visitor::PrintAST::Visit(Class *class_decl) {
+
+}
+
+void Visitor::PrintAST::Visit(ClassMethod *method) {
+
+}
+
+void Visitor::PrintAST::Visit(ClassField *field) {
+
+}
+
+void Visitor::PrintAST::Visit(ProgramBody *body) {
+
+}
+
+void Visitor::PrintAST::Visit(Expr::This *this_expr) {
+  CreateNodeAndLink("this");
 }
 
 

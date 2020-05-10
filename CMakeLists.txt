@@ -33,35 +33,35 @@ set(CMAKE_CXX_STANDARD 14)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${Compilers_SOURCE_DIR}/bin)
 
-project(MiniJavaCompiler)
+project(jc)
 set(
     HEADERS
-    ${MiniJavaCompiler_SOURCE_DIR}/driver.hh
-    ${MiniJavaCompiler_SOURCE_DIR}/parser.hh
+    ${jc_SOURCE_DIR}/driver.hh
+    ${jc_SOURCE_DIR}/parser.hh
     )
 
 BISON_TARGET(
     MyParser
     parser.y
-    ${MiniJavaCompiler_SOURCE_DIR}/parser.cpp
-    DEFINES_FILE ${MiniJavaCompiler_SOURCE_DIR}/parser.hh
+    ${jc_SOURCE_DIR}/parser.cpp
+    DEFINES_FILE ${jc_SOURCE_DIR}/parser.hh
 )
 
 FLEX_TARGET(
     MyScanner
     scanner.l
-    ${MiniJavaCompiler_SOURCE_DIR}/scanner.cpp
+    ${jc_SOURCE_DIR}/scanner.cpp
 )
 
 ADD_FLEX_BISON_DEPENDENCY(MyScanner MyParser)
 
 add_executable(
-    MiniJavaCompiler
+    jc
     main.cpp
     driver.cpp
     ${BISON_MyParser_OUTPUTS}
     ${FLEX_MyScanner_OUTPUTS}
-        Program.h Expr/Expr.h BaseNode.h Expr/BinaryOp.cpp Expr/BinaryOp.h Visitor/Visitor.h Entity/Const.hpp Type/Type.h Entity/Entity.h Entity/Id.h Entity/Id.cpp Stmt/Stmt.h Stmt/Assign.cpp Stmt/Assign.h Stmt/Print.cpp Stmt/Print.h Stmt/VarDecl.cpp Stmt/VarDecl.h Expr/UnaryOp.h Stmt/Ret.cpp Stmt/Ret.h Stmt/List.cpp Stmt/List.h Expr/UnaryOp.cpp ast.h Expr/rvalue.cpp Expr/rvalue.h Expr/lvalue.cpp Expr/lvalue.h Stmt/Cond.cpp Stmt/Cond.h ast_decl.h Visitor/PrintAST.cpp Visitor/PrintAST.h Visitor/Executor.h Visitor/Executor.cpp log.h SymbolTable/Symbol.cpp SymbolTable/Symbol.h Stmt/ScopedList.cpp Stmt/ScopedList.h Object/Object.h Object/Integer.cpp Object/Integer.h Object/UninitObject.cpp Object/UninitObject.h SymbolTable/Scope.cpp SymbolTable/Scope.h SymbolTable/ScopeTree.cpp SymbolTable/ScopeTree.h SymbolTable/Table.cpp SymbolTable/Table.h error.h Visitor/SymbolTableBuilder.cpp Visitor/SymbolTableBuilder.h)
-target_include_directories(MiniJavaCompiler PRIVATE ${MiniJavaCompiler_SOURCE_DIR})
+        Program.h Expr/Expr.h BaseNode.h Expr/BinaryOp.cpp Expr/BinaryOp.h Visitor/Visitor.h Expr/Id.h Expr/Id.cpp Stmt/Stmt.h Stmt/Assign.cpp Stmt/Assign.h Stmt/Print.cpp Stmt/Print.h Stmt/VarDecl.cpp Stmt/VarDecl.h Expr/UnaryOp.h Stmt/Ret.cpp Stmt/Ret.h Stmt/List.cpp Stmt/List.h Expr/UnaryOp.cpp ast.h Stmt/Cond.cpp Stmt/Cond.h ast_decl.h Visitor/PrintAST.cpp Visitor/PrintAST.h Visitor/Executor.h Visitor/Executor.cpp log.h SymbolTable/Symbol.cpp SymbolTable/Symbol.h Stmt/ScopedList.cpp Stmt/ScopedList.h Object/Object.h Object/Integer.cpp Object/Integer.h Object/UninitObject.cpp Object/UninitObject.h SymbolTable/Scope.cpp SymbolTable/Scope.h SymbolTable/ScopeTree.cpp SymbolTable/ScopeTree.h SymbolTable/Table.cpp SymbolTable/Table.h error.h Visitor/SymbolTableBuilder.cpp Visitor/SymbolTableBuilder.h Decl/Base.h Decl/ClassBody.cpp Decl/ClassBody.h Decl/Class.cpp Decl/Class.h Decl/ClassMethod.cpp Decl/ClassMethod.h Decl/ClassField.cpp Decl/ClassField.h Functions/Function.cpp Functions/Function.h Decl/ClassMember.h Decl/ProgramBody.cpp Decl/ProgramBody.h Expr/Const.cpp Expr/Const.h Expr/This.cpp Expr/This.h Visitor/TypeChecker.cpp Visitor/TypeChecker.h Type/Type.h Type/Int.h Type/Bool.h Type/UserType.h Program.cpp Functions/FuncParamList.cpp Functions/FuncParamList.h Functions/FuncParameter.cpp Functions/FuncParameter.h Decl/MainClass.h Decl/MainClass.cpp Type/Void.h)
+target_include_directories(jc PRIVATE ${jc_SOURCE_DIR})
 
 

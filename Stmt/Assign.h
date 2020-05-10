@@ -5,20 +5,19 @@
 #pragma once
 
 #include "Stmt/Stmt.h"
-#include "Entity/Id.h"
+#include "Expr/Id.h"
 #include "Expr/Expr.h"
 #include "Visitor/Visitor.h"
-#include "Expr/lvalue.h"
 
 namespace Stmt {
   class Assign : public Stmt::Base {
    public:
-    Assign(Expr::lvalue* lvalue, Expr::Base* expr) : lvalue(lvalue), expr(expr) {}
+    Assign(Expr::Id* id, Expr::Base* expr) : lhs(id), rhs(expr) {}
   
     void Accept(Visitor::Base *visitor) override;
  
    public:
-    Expr::lvalue* lvalue;
-    Expr::Base* expr;
+    Expr::Id* lhs;
+    Expr::Base* rhs;
   };
 }

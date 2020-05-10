@@ -23,10 +23,6 @@ void Expr::BinaryOp::Accept(Visitor::Base *visitor) {
   visitor->Visit(this);
 }
 
-int Expr::BinaryOp::eval() const {
-  return op(left->eval(), right->eval());
-}
-
 Expr::BinaryOp *Expr::BinaryOp::Add(Expr::Base *left, Expr::Base *right) {
   return new Expr::BinaryOp(BinOperationType::Add, left, right);
 }

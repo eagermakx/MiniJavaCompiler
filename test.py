@@ -16,7 +16,7 @@ def png_file(test):
 
 output_dir = "TestOutput"
 
-executable = './bin/MiniJavaCompiler'
+executable = './bin/jc'
 parse_command = "{executable} ./JavaExamples/{test}.java --ast ./{dir}/{test}.dot"
 render_image_command = "dot -Tpng ./{dir}/{test}.dot -o {dir}/{test}.png"
 

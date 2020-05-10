@@ -32,8 +32,6 @@ namespace Expr {
     static BinaryOp* Div(Expr::Base* left, Expr::Base* right);
  
     void Accept(Visitor::Base* visitor) override;
-
-    int eval() const override;
  
    public:
     Expr::Base* left;

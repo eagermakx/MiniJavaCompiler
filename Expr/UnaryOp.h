@@ -24,8 +24,6 @@ namespace Expr {
     static UnaryOp* Not(Expr::Base* expr);
     static UnaryOp* Minus(Expr::Base* expr);
   
-    int eval() const override;
-  
     void Accept(Visitor::Base *visitor) override;
  
    public:

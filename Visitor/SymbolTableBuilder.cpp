@@ -3,7 +3,9 @@
 //
 
 #include <Stmt/ScopedList.h>
-#include <Entity/Id.h>
+#include <Expr/Id.h>
+#include <Decl/MainClass.h>
+
 #include "SymbolTableBuilder.h"
 #include "Program.h"
 #include "SymbolTable/Symbol.h"
@@ -24,7 +26,8 @@ void Visitor::SymbolTableBuilder::Visit(Program *program) {
   
   scopes_.push(global);
   
-  Visit(program->list);
+  auto* main_method = program->main_class->GetMainFunction();
+  main_method->statements->Accept(this);
   
   scopes_.pop();
 }
@@ -58,12 +61,11 @@ void Visitor::SymbolTableBuilder::Visit(Stmt::List *list) {
   }
 }
 
-void Visitor::SymbolTableBuilder::Visit(Entity::Const *that) {
-  UNREACHABLE("SymbolTableBuilder::Visit(Entity::Const*)");
+void Visitor::SymbolTableBuilder::Visit(Expr::Const *that) {
 }
 
-void Visitor::SymbolTableBuilder::Visit(Entity::Id *that) {
-  UNREACHABLE("SymbolTableBuilder::Visit(Entity::Id*)");
+void Visitor::SymbolTableBuilder::Visit(Expr::Id *that) {
+  FindDefinition(that);
 }
 
 void Visitor::SymbolTableBuilder::Visit(Expr::BinaryOp *that) {
@@ -71,7 +73,7 @@ void Visitor::SymbolTableBuilder::Visit(Expr::BinaryOp *that) {
   that->right->Accept(this);
 }
 
-void Visitor::SymbolTableBuilder::Visit(Expr::lvalue *that) {
+/*void Visitor::SymbolTableBuilder::Visit(Expr::lvalue *that) {
   FindDefinition(that->id);
 }
 
@@ -85,15 +87,15 @@ void Visitor::SymbolTableBuilder::Visit(Expr::rvalue *that) {
       break;
     default: UNREACHABLE("");
   }
-}
+}*/
 
 void Visitor::SymbolTableBuilder::Visit(Expr::UnaryOp *that) {
   that->expr->Accept(this);
 }
 
 void Visitor::SymbolTableBuilder::Visit(Stmt::Assign *that) {
-  that->expr->Accept(this);
-  that->lvalue->Accept(this);
+  that->rhs->Accept(this);
+  that->lhs->Accept(this);
 }
 
 void Visitor::SymbolTableBuilder::Visit(Stmt::Cond *that) {
@@ -116,23 +118,43 @@ void Visitor::SymbolTableBuilder::Visit(Stmt::Ret *that) {
 
 void Visitor::SymbolTableBuilder::Visit(Stmt::VarDecl *that) {
   Scope* current_scope = scopes_.top();
-  std::string var_name = that->ident->identifier;
+  std::string var_name = that->var_id->identifier;
   
   // Will terminate if that variable was defined previously
   // in the same scope
   current_tree_->DefineVariable(current_scope, var_name);
-  that->ident->symbol = new Symbol(current_scope, var_name);
+  that->var_id->symbol.Reset(current_scope, var_name);
 }
 
-void Visitor::SymbolTableBuilder::FindDefinition(Entity::Id *id) {
+void Visitor::SymbolTableBuilder::FindDefinition(Expr::Id *id) {
   std::string& var = id->identifier;
   
   // Might be defined out of current scope.
   // If was not found, terminates
   Scope* def_scope = current_tree_->TopDefinitionLayer(var);
-  id->symbol = new Symbol(def_scope, var);
+  id->symbol.Reset(def_scope, var);
   
   // LOG("Found definition for \'" << id->symbol->GetName() << "\' at layer" << scopes_.top()->GetId());
   // LOG("Stack size = " << current_tree_->scope_shadowing_map_.at(var).size());
+}
+
+void Visitor::SymbolTableBuilder::Visit(Class *class_decl) {
+
+}
+
+void Visitor::SymbolTableBuilder::Visit(ClassMethod *method) {
+
+}
+
+void Visitor::SymbolTableBuilder::Visit(ClassField *field) {
+
+}
+
+void Visitor::SymbolTableBuilder::Visit(ProgramBody *body) {
+
+}
+
+void Visitor::SymbolTableBuilder::Visit(Expr::This *this_expr) {
+
 }
 

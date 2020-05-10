@@ -6,18 +6,13 @@
 
 class Program;
 
-namespace Entity {
-  class Base;
-  class Const;
-  class Id;
-}
-
 namespace Expr {
   class Base;
   class BinaryOp;
   class UnaryOp;
-  class lvalue;
-  class rvalue;
+  class Const;
+  class Id;
+  class This;
 }
 
 namespace Stmt {
@@ -30,3 +25,21 @@ namespace Stmt {
   class List;
   class ScopedList;
 }
+
+namespace Decl {
+  class Base;
+}
+
+class ProgramBody;
+class Class;
+class ClassBody;
+class ClassField;
+class ClassMethod;
+class MainClass;
+class FuncParamList;
+class FuncParameter;
+
+class Type;
+class Int;
+class Bool;
+class UserType;

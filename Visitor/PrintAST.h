@@ -18,20 +18,26 @@ namespace Visitor {
     ~PrintAST();
     
     void Run(Program* program);
-  
+    
     void Visit(Program* program) override;
-    void Visit(Entity::Const* that) override;
-    void Visit(Entity::Id* that) override;
-    void Visit(Expr::BinaryOp* that) override;
-    void Visit(Expr::lvalue* that) override;
-    void Visit(Expr::rvalue* that) override;
-    void Visit(Expr::UnaryOp* that) override;
-    void Visit(Stmt::Assign* that) override;
-    void Visit(Stmt::Cond* that) override;
-    void Visit(Stmt::Print* that) override;
-    void Visit(Stmt::Ret* that) override;
-    void Visit(Stmt::List* that) override;
-    void Visit(Stmt::VarDecl* that) override;
+  
+    void Visit(Class* class_decl) override;
+    void Visit(ClassMethod* method) override;
+    void Visit(ClassField* field) override;
+    void Visit(ProgramBody* body) override;
+  
+    void Visit(Expr::BinaryOp* binary_op) override;
+    void Visit(Expr::Const* const_expr) override;
+    void Visit(Expr::Id* rvalue) override;
+    void Visit(Expr::This* this_expr) override;
+    void Visit(Expr::UnaryOp* unary_op) override;
+  
+    void Visit(Stmt::Assign* assn) override;
+    void Visit(Stmt::Cond* cond) override;
+    void Visit(Stmt::Print* print) override;
+    void Visit(Stmt::Ret* ret) override;
+    void Visit(Stmt::List* list) override;
+    void Visit(Stmt::VarDecl* var_decl) override;
     void Visit(Stmt::ScopedList* scoped_list) override;
  
    private:

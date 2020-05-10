@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
     bool print_ast = false;
     std::string ast_output;
 
-    for (int i = 1; i < argc; ++i) {
+    for (int i = 2; i < argc; ++i) {
         if (argv[i] == std::string("-p")) {
           driver.trace_parsing = true;
         } else if (argv[i] == std::string("-s")) {

@@ -6,10 +6,13 @@
 
 #include "BaseNode.h"
 #include "Visitor/Visitor.h"
+#include "Type/Type.h"
 
 namespace Expr {
-  class Base : public BaseNode {
-   public:
-    virtual int eval() const = 0;
-  };
+
+class Base : public BaseNode {
+ public:
+  Type* type{nullptr};
+};
+
 }

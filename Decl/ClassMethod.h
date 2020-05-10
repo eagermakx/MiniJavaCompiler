@@ -1,0 +1,27 @@
+//
+// Created by Igor Maximov on 08.05.2020.
+//
+
+#pragma once
+#include "Base.h"
+#include "ClassMember.h"
+#include "Functions/FuncParameter.h"
+
+#include <string>
+
+class ClassMethod : public Decl::Base {
+ public:
+  ClassMethod(Type* out, std::string name, FuncParamList* params, Stmt::List* list, bool is_static = false);
+  
+  void Accept(Visitor::Base *visitor) override;
+ 
+ public:
+  std::string name;
+  
+  Type* out;
+  std::vector<FuncParameter> parameters;
+  
+  Stmt::List* statements;
+  
+  bool is_static{false};
+};
