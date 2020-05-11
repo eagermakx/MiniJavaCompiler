@@ -18,6 +18,6 @@ class Id : public Expr::Base {
    
    public:
     std::string identifier;
-    Symbol symbol;
+    Symbol* symbol;
   };
 }

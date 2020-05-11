@@ -45,6 +45,7 @@
 // Unable to classify :)
     END 0 "end of file"
     SEMICOLON ";"
+    COMMA	  ","
 
 // Brackets
     LPAREN 	 "("
@@ -187,20 +188,21 @@ expression:
     | expression "/" expression { $$ = Expr::BinaryOp::Div($1, $3); }
     | "!" expression { $$ = Expr::UnaryOp::Not($2); }
     | "(" expression ")" { $$ = $2; }
-    // | method_invocation { }
     | var_id { $$ = $1; }
     | "number" { $$ = new Expr::Const($1); }
     | "this" { $$ = new Expr::This(); }
     | "true" { $$ = new Expr::Const(1); }
-    | "false" { $$ = new Expr::Const(0); };
+    | "false" { $$ = new Expr::Const(0); }
+    | var_id "." "identifier" "(" ")" {};
 
-method_invocation:
-	expression "." "identifier" "(" ")" {};
+/*method_invocation:
+	expression "." "identifier" "(" ")" {};*/
 
 type:
     "int" { $$ = new Int(); }
     | "boolean" { $$ = new Bool(); }
     | "identifier" { $$ = new UserType($1); }
+    | "void" { $$ = new Void(); }
 
 local_var_decl:
     type var_id ";" { $$ = new Stmt::VarDecl($1, $2); };

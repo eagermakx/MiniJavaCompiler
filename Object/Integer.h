@@ -4,7 +4,8 @@
 
 #pragma once
 
-#include "Object.h"
+#include "ClassObject.h"
+#include <Type/Types.h>
 
 class Integer : public Object {
  public:

@@ -16,3 +16,7 @@ MainClass::MainClass(std::string name, Stmt::List *main_method) : Class(std::mov
 ClassMethod *MainClass::GetMainFunction() {
   return methods[0];
 }
+
+void MainClass::Accept(Visitor::Base *visitor) {
+  visitor->Visit(this);
+}

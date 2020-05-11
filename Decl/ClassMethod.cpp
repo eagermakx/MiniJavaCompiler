@@ -3,6 +3,8 @@
 //
 
 #include <Functions/FuncParamList.h>
+#include <Type/Type.h>
+
 #include "ClassMethod.h"
 
 ClassMethod::ClassMethod(Type *out, std::string name, FuncParamList *params, Stmt::List *list, bool is_static)
@@ -15,4 +17,18 @@ ClassMethod::ClassMethod(Type *out, std::string name, FuncParamList *params, Stm
 
 void ClassMethod::Accept(Visitor::Base *visitor) {
   visitor->Visit(this);
+}
+
+std::string ClassMethod::Representation() {
+  std::string ans = Repr(out) + " " + name + "(";
+  
+  for (int i = 0; i < parameters.size(); ++i) {
+    ans += Repr(parameters[i].type) + " " + parameters[i].name;
+    if (i != parameters.size() - 1) {
+      ans += ", ";
+    }
+  }
+  
+  ans += ")";
+  return ans;
 }

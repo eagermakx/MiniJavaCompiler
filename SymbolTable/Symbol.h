@@ -3,7 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include <memory>
-#include "SymbolTable/Scope.h"
+#include "SymbolTable/VariableScope.h"
 
 class Symbol {
  public:
@@ -17,7 +17,7 @@ class Symbol {
   };
   
  public:
-  explicit Symbol(Scope* scope, std::string name);
+  explicit Symbol(VariableScope* scope, std::string name);
   
   Symbol() = default;
   Symbol(Symbol&& other) noexcept = default;
@@ -25,19 +25,19 @@ class Symbol {
   
   Symbol& operator= (Symbol&& other) = default;
   
-  void Reset(Scope* parent_scope, std::string new_label);
+  void Reset(VariableScope* parent_scope, std::string new_label);
   
   bool operator==(const Symbol& other) const;
   bool operator!=(const Symbol& other) const;
   
   const char* GetName() const;
-  Scope* GetParentScope() const;
+  VariableScope* GetParentScope() const;
   
   void AssignLabel(std::string new_label);
   const char* GetLabel();
   
  private:
-  Scope* parent_scope_{nullptr};
+  VariableScope* parent_scope_{nullptr};
   std::string label_;
 };
 

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <driver.hh>
 #include "SymbolTable/Symbol.h"
+#include "log.h"
 
 // Config to print ast : ../java_examples/if_else.java --ast ../TestOutput/if_else.dot
 
@@ -31,14 +32,14 @@ int main(int argc, char** argv) {
     }
     
     if (!driver.Parse(source_file)) {
-      std::cout << "[*] Parsed successfully (returned " << driver.result << ")" << std::endl;
+      LOG("[*] Parsed successfully (returned " << driver.result << ")");
       
       if (print_ast) {
-        std::cout << "[*] Processing AST... " << std::endl;
+        LOG("[*] Processing AST... ");
         driver.PrintAST(ast_output);
         result = 0;
       } else {
-        std::cout << "[*] Running... " << std::endl;
+        LOG("[*] Running... ");
         result = driver.Run();
         std::cout << "Process finished with exit code " << result << std::endl;
       }

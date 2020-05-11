@@ -11,13 +11,12 @@
 namespace Stmt {
   class VarDecl : public Stmt::Base {
    public:
-    explicit VarDecl(Type* type, Expr::Id* var_id) : type(type), var_id(var_id) {}
+    explicit VarDecl(Type* type, Expr::Id* var_id);
     
     void Accept(Visitor::Base *visitor) override;
    
    public:
-    Type* type;
+    // Type* type;
     Expr::Id* var_id;
-    Symbol symbol;
   };
 }

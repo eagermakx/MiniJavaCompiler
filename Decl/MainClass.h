@@ -9,5 +9,7 @@ class MainClass : public Class {
  public:
   MainClass(std::string name, Stmt::List* main_method);
   
+  void Accept(Visitor::Base* visitor) override;
+  
   ClassMethod* GetMainFunction();
 };

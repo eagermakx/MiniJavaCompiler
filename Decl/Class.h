@@ -9,6 +9,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 class Class : public Decl::Base {
  public:
@@ -16,9 +17,17 @@ class Class : public Decl::Base {
   explicit Class(std::string name);
   
   void Accept(Visitor::Base *visitor) override;
+  
+  size_t EvaluateObjectSize();
+  
+  bool FieldExists(ClassField* field) const;
+  size_t GetFieldOffset(ClassField* field) const;
  
  public:
   std::string name;
   std::vector<ClassMethod*> methods;
   std::vector<ClassField*> fields;
+ 
+ private:
+  std::unordered_map<ClassField*, size_t> fields_offsets;
 };

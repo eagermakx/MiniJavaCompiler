@@ -16,6 +16,8 @@ class ClassMethod : public Decl::Base {
   ClassMethod(Type* out, std::string name, FuncParamList* params, Stmt::List* list, bool is_static = false);
   
   void Accept(Visitor::Base *visitor) override;
+  
+  std::string Representation();
  
  public:
   Type* out;

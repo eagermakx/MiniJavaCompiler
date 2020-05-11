@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <Decl/MainClass.h>
+#include <Type/Type.h>
 
 Visitor::PrintAST::PrintAST(const std::string &filename) {
   stream_.open(filename, std::ios_base::out);
@@ -52,8 +53,11 @@ void Visitor::PrintAST::Visit(Program *program) {
   
   PushNode(node);
   
-  auto* main = program->main_class->GetMainFunction();
-  main->statements->Accept(this);
+  program->main_class->Accept(this);
+  
+  for (auto& class_ : program->classes) {
+    class_->Accept(this);
+  }
   
   PopNode();
 }
@@ -66,8 +70,8 @@ void Visitor::PrintAST::Visit(Expr::Const *that) {
 void Visitor::PrintAST::Visit(Expr::Id *that) {
   std::string label;
   
-  label = that->symbol.GetName();
-  std::cout << " :::: " << label << std::endl;
+  label = that->symbol->GetName();
+  // std::cout << " :::: " << label << std::endl;
   
   CreateNodeAndLink(label);
 }
@@ -125,7 +129,7 @@ void Visitor::PrintAST::Visit(Expr::rvalue *that) {
 }*/
 
 void Visitor::PrintAST::Visit(Expr::UnaryOp *that) {
-  int node = CreateNodeAndLink(Repr(that->type));
+  int node = CreateNodeAndLink(Repr(that->operation_type));
   
   PushNode(node);
   that->expr->Accept(this);
@@ -220,15 +224,26 @@ void Visitor::PrintAST::Visit(Stmt::ScopedList *scoped_list) {
 }
 
 void Visitor::PrintAST::Visit(Class *class_decl) {
-
+  int node = CreateNodeAndLink("Class: " + class_decl->name);
+  PushNode(node);
+  for (auto& method : class_decl->methods) {
+    method->Accept(this);
+  }
+  for (auto& field : class_decl->fields) {
+    field->Accept(this);
+  }
+  PopNode();
 }
 
 void Visitor::PrintAST::Visit(ClassMethod *method) {
-
+  int node = CreateNodeAndLink(method->Representation());
+  PushNode(node);
+  method->statements->Accept(this);
+  PopNode();
 }
 
 void Visitor::PrintAST::Visit(ClassField *field) {
-
+  CreateNodeAndLink(Repr(field->type) + " " + field->name);
 }
 
 void Visitor::PrintAST::Visit(ProgramBody *body) {
@@ -237,6 +252,21 @@ void Visitor::PrintAST::Visit(ProgramBody *body) {
 
 void Visitor::PrintAST::Visit(Expr::This *this_expr) {
   CreateNodeAndLink("this");
+}
+
+void Visitor::PrintAST::Visit(MainClass *main_class) {
+  int node = CreateNodeAndLink("MainClass: " + main_class->name);
+  PushNode(node);
+  main_class->GetMainFunction()->Accept(this);
+  PopNode();
+}
+
+void Visitor::PrintAST::Visit(Stmt::New *new_stmt) {
+
+}
+
+void Visitor::PrintAST::Visit(Stmt::Call *call) {
+
 }
 
 

@@ -24,6 +24,8 @@ namespace Stmt {
   class VarDecl;
   class List;
   class ScopedList;
+  class Call;
+  class New;
 }
 
 namespace Decl {

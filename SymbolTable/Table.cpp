@@ -35,6 +35,6 @@ void Table::AddSymbol(Symbol* symbol, BaseNode *node, Symbol::SymbolType type) {
   hash_map_.insert({*symbol, {node, type}});
 }
 
-void Table::AssignSymbol(Symbol *symbol, const std::string& name, Scope *parent) {
+void Table::AssignSymbol(Symbol *symbol, const std::string& name, VariableScope *parent) {
   symbol->Reset(parent, name);
 }

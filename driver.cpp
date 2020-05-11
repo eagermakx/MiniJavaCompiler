@@ -3,6 +3,8 @@
 #include <Visitor/PrintAST.h>
 #include <Visitor/Executor.h>
 #include <Visitor/SymbolTableBuilder.h>
+#include <Visitor/TypeChecker.h>
+#include <log.h>
 
 Driver::Driver() :
     trace_parsing(false),
@@ -24,6 +26,9 @@ int Driver::Parse(const std::string& f) {
     Visitor::SymbolTableBuilder symtable_builder;
     symtable_builder.Process(program);
     
+    Visitor::TypeChecker type_checker;
+    type_checker.Run(program);
+    
     return res;
 }
 
@@ -32,7 +37,7 @@ void Driver::scan_begin() {
   if (file.empty () || file == "-") {
   } else {
     stream.open(file);
-    std::cout << file << std::endl;
+    LOG(file);
     scanner.yyrestart(&stream);
   }
 }

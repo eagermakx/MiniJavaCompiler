@@ -79,6 +79,7 @@ blank [ \t\r]
 "int"      return yy::parser::make_t_int        (loc);
 
 ";"        return yy::parser::make_SEMICOLON    (loc);
+","        return yy::parser::make_COMMA        (loc);
 
 {int}      return make_NUMBER(yytext, loc);
 {id}       return yy::parser::make_IDENTIFIER(yytext, loc);

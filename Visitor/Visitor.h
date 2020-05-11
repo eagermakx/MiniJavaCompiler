@@ -15,6 +15,7 @@ namespace Visitor {
     virtual void Visit(ClassMethod* method) = 0;
     virtual void Visit(ClassField* field) = 0;
     virtual void Visit(ProgramBody* body) = 0;
+    virtual void Visit(MainClass* main_class) = 0;
     
     virtual void Visit(Expr::BinaryOp* binary_op) = 0;
     virtual void Visit(Expr::Const* const_expr) = 0;
@@ -29,5 +30,7 @@ namespace Visitor {
     virtual void Visit(Stmt::List* list) = 0;
     virtual void Visit(Stmt::VarDecl* var_decl) = 0;
     virtual void Visit(Stmt::ScopedList* scoped_list) = 0;
+    virtual void Visit(Stmt::New* new_stmt) = 0;
+    virtual void Visit(Stmt::Call* call) = 0;
   };
 }

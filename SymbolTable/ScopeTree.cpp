@@ -5,17 +5,17 @@
 #include "ScopeTree.h"
 #include "error.h"
 
-void ScopeTree::DefineVariable(Scope *layer, const std::string& variable) {
+void ScopeTree::DefineVariable(VariableScope *layer, const std::string& variable) {
   if (!VariableDefined(variable)) {
     // Add to stack
-    scope_shadowing_map_.insert({variable, std::stack<Scope*>()});
+    scope_shadowing_map_.insert({variable, std::stack<VariableScope*>()});
   }
   
   layer->DefineVariable(variable);
   scope_shadowing_map_.at(variable).push(layer);
 }
 
-Scope *ScopeTree::TopDefinitionLayer(const std::string& variable) {
+VariableScope *ScopeTree::TopDefinitionLayer(const std::string& variable) {
   if (!VariableDefined(variable)) {
     ERROR("Undefined variable", "ScopeLayerTree::TopDefinitionLayer");
   }

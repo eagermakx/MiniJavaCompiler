@@ -8,7 +8,7 @@
 #include <string>
 
 struct UserType : public Type {
-  explicit UserType(std::string name) : Type(PossibleTypes::UserClass), class_name(std::move(name)) {}
+  explicit UserType(std::string name) : Type(PossibleTypes::UserType), class_name(std::move(name)) {}
   
   std::string class_name;
 };

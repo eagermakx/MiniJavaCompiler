@@ -13,6 +13,8 @@ class ClassField : public Decl::Base {
   ClassField(Type* type, std::string label);
   
   void Accept(Visitor::Base *visitor) override;
+  
+  size_t EvaluateFieldSize();
  
  public:
   std::string name;

@@ -1,9 +1,8 @@
 //
-// Created by Igor Maximov on 03.05.2020.
+// Created by Igor Maximov on 10.05.2020.
 //
 
 #pragma once
-#include "Object/Object.h"
 
 #include <vector>
 #include <unordered_map>
@@ -17,26 +16,19 @@ using ScopeId = size_t;
 class Scope {
  public:
   explicit Scope(Scope* parent);
-  Scope() = default;
- 
-  bool Exists(const std::string&) const;
-  void DefineVariable(const std::string &variable);
+  Scope();
   
-  const char* Label() const;
+  std::string GetName() const;
+  std::string GetFullLabel() const;
+  
   void SetLabel(const char* new_label);
+  void GenerateFullLabel();
   
   ScopeId GetId() const;
- 
- public:
-  std::vector<std::string> variables_;
-  
  private:
   ScopeId id_;
-  
   Scope* parent_{nullptr};
-  std::unordered_set<std::string> existing_variables_;
   
-  // std::unordered_map<std::string, std::shared_ptr<Object>> variable_value_;
-  // std::unordered_map<std::string, size_t> offset_;
-  std::string layer_label_;
+  std::string name_;
+  std::string full_path_;
 };

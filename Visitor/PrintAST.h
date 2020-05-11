@@ -25,6 +25,7 @@ namespace Visitor {
     void Visit(ClassMethod* method) override;
     void Visit(ClassField* field) override;
     void Visit(ProgramBody* body) override;
+    void Visit(MainClass* main_class) override;
   
     void Visit(Expr::BinaryOp* binary_op) override;
     void Visit(Expr::Const* const_expr) override;
@@ -39,6 +40,8 @@ namespace Visitor {
     void Visit(Stmt::List* list) override;
     void Visit(Stmt::VarDecl* var_decl) override;
     void Visit(Stmt::ScopedList* scoped_list) override;
+    void Visit(Stmt::New* new_stmt) override;
+    void Visit(Stmt::Call* call) override;
  
    private:
     void GraphPrologue();

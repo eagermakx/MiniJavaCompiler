@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Scope.h"
+#include "VariableScope.h"
 #include "ScopeTree.h"
 #include "Symbol.h"
 #include "Decl/ClassMethod.h"
@@ -31,7 +31,7 @@ class Table {
  
  private:
   void AddSymbol(Symbol* symbol, BaseNode* node, Symbol::SymbolType type);
-  void AssignSymbol(Symbol* symbol, const std::string& name, Scope* parent);
+  void AssignSymbol(Symbol* symbol, const std::string& name, VariableScope* parent);
   
  private:
   std::unordered_map<Symbol, SymbolInfo> hash_map_;

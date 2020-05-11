@@ -10,9 +10,7 @@
 #include <Stmt/Ret.h>
 #include <ast.h>
 #include <log.h>
-
 #include <iostream>
-#include <Decl/MainClass.h>
 
 namespace Visitor {
 
@@ -42,7 +40,7 @@ void Executor::Visit(Stmt::Assign *that) {
   // .at() function throws `out_of_range` exception
   // when passed a non-existing key, just how we want it
   
-  Assign(&that->lhs->symbol, result);
+  Assign(that->lhs->symbol, result);
 }
 
 void Executor::Visit(Stmt::Cond *that) {
@@ -75,7 +73,7 @@ void Executor::Visit(Stmt::List *that) {
 }
 
 void Executor::Visit(Stmt::VarDecl *that) {
-  Decl(&that->symbol);
+  Decl(that->var_id->symbol);
 }
 
 void Executor::Visit(Expr::Const *that) {
@@ -83,7 +81,7 @@ void Executor::Visit(Expr::Const *that) {
 }
 
 void Executor::Visit(Expr::Id *that) {
-  temp_register_ = Value(&that->symbol);
+  temp_register_ = Value(that->symbol);
 }
 
 void Executor::Visit(Expr::This *this_expr) {
@@ -124,7 +122,8 @@ void Executor::Visit(Stmt::ScopedList *scoped_list) {
 
 void Executor::Assign(Symbol* var, int value) {
   try {
-    vars_.at(var->GetName()) = value;
+    std::string name = var->GetName();
+    vars_.at(name) = value;
   } catch (std::out_of_range& e) {
     std::cerr << "[!] Assignment to undeclared variable";
     exit(1);
@@ -132,7 +131,8 @@ void Executor::Assign(Symbol* var, int value) {
 }
 
 void Executor::Decl(Symbol* var) {
-  vars_.insert({var->GetName(), 0});
+  std::string name = var->GetName();
+  vars_.insert({name, 0});
 }
 
 int Executor::Value(Symbol* var) {
@@ -160,6 +160,18 @@ void Executor::Visit(ClassField *field) {
 }
 
 void Executor::Visit(ProgramBody *body) {
+
+}
+
+void Executor::Visit(MainClass *main_class) {
+
+}
+
+void Executor::Visit(Stmt::New *new_stmt) {
+
+}
+
+void Executor::Visit(Stmt::Call *call) {
 
 }
 

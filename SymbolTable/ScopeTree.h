@@ -5,21 +5,21 @@
 
 #pragma once
 
-#include "Scope.h"
+#include "VariableScope.h"
 #include <unordered_map>
 #include <string>
 #include <stack>
 
 class ScopeTree {
  public:
-  explicit ScopeTree(Scope* root) : root(root) {}
+  explicit ScopeTree(VariableScope* root) : root(root) {}
   
-  void DefineVariable(Scope* layer, const std::string& variable);
-  Scope* TopDefinitionLayer(const std::string& variable);
+  void DefineVariable(VariableScope* layer, const std::string& variable);
+  VariableScope* TopDefinitionLayer(const std::string& variable);
   
-  Scope* root;
+  VariableScope* root;
 
   bool VariableDefined(const std::string& variable);
   
-  std::unordered_map<std::string, std::stack<Scope*>> scope_shadowing_map_;
+  std::unordered_map<std::string, std::stack<VariableScope*>> scope_shadowing_map_;
 };

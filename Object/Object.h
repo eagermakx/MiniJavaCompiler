@@ -1,12 +1,16 @@
 //
-// Created by Igor Maximov on 03.05.2020.
+// Created by Igor Maximov on 11.05.2020.
 //
 
 #pragma once
+#include <Type/Type.h>
 
 class Object {
  public:
-  virtual int ToInt() = 0;
+  // explicit Object(Type* type) : type(type) {}
+  Object() = default;
+  
   virtual ~Object() = default;
+  
+  virtual int ToInt() = 0;
 };
-

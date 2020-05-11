@@ -25,6 +25,8 @@
 #include "Stmt/Ret.h"
 #include "Stmt/VarDecl.h"
 #include "Stmt/Cond.h"
+#include "Stmt/New.h"
+#include "Stmt/Call.h"
 
 #include "Decl/Class.h"
 #include "Decl/ClassBody.h"
@@ -38,6 +40,7 @@
 #include "Type/Type.h"
 #include "Type/Int.h"
 #include "Type/Bool.h"
+#include "Type/Void.h"
 #include "Type/UserType.h"
 
 
