@@ -11,6 +11,7 @@
 #include <ast.h>
 #include <log.h>
 #include <iostream>
+#include <Object/Integer.h>
 
 namespace Visitor {
 
@@ -22,7 +23,7 @@ int Executor::Run(Program *program) {
 void Executor::Visit(Program *program) {
   auto* main = program->main_class->GetMainFunction();
   
-  main->statements->Accept(this);
+  CallMethod(program->main_class, main, std::vector<std::shared_ptr<Object>>());
 }
 
 int Executor::CalcExpr(Expr::Base *expr) {
@@ -40,7 +41,7 @@ void Executor::Visit(Stmt::Assign *that) {
   // .at() function throws `out_of_range` exception
   // when passed a non-existing key, just how we want it
   
-  Assign(that->lhs->symbol, result);
+  Assign(that->lhs->symbol, std::make_shared<Integer>(result));
 }
 
 void Executor::Visit(Stmt::Cond *that) {
@@ -81,7 +82,7 @@ void Executor::Visit(Expr::Const *that) {
 }
 
 void Executor::Visit(Expr::Id *that) {
-  temp_register_ = Value(that->symbol);
+  temp_register_ = Value(that->symbol)->ToInt();
 }
 
 void Executor::Visit(Expr::This *this_expr) {
@@ -120,32 +121,6 @@ void Executor::Visit(Stmt::ScopedList *scoped_list) {
   }*/
 }
 
-void Executor::Assign(Symbol* var, int value) {
-  try {
-    std::string name = var->GetName();
-    vars_.at(name) = value;
-  } catch (std::out_of_range& e) {
-    std::cerr << "[!] Assignment to undeclared variable";
-    exit(1);
-  }
-}
-
-void Executor::Decl(Symbol* var) {
-  std::string name = var->GetName();
-  vars_.insert({name, 0});
-}
-
-int Executor::Value(Symbol* var) {
-  int res = 0;
-  try {
-    res = vars_.at(var->GetName());
-  } catch (std::out_of_range& e) {
-    std::cerr << "[!] Accessing undeclared variable";
-    exit(1);
-  }
-  
-  return res;
-}
 
 void Executor::Visit(Class *class_decl) {
 
@@ -172,11 +147,86 @@ void Executor::Visit(Expr::New *new_expr) {
 }
 
 void Executor::Visit(Expr::Call *call) {
-  call->
+  CallMethod(call->cls, call->actual, std::vector<std::shared_ptr<Object>>(), call->pointer);
 }
 
 void Executor::Visit(Stmt::ExprStmt *stmt_expr) {
   stmt_expr->expr->Accept(this);
 }
+
+std::shared_ptr<Object>
+Executor::CallMethod(Class *cls,
+                     ClassMethod *method,
+                     std::vector<std::shared_ptr<Object>> &&params,
+                     std::shared_ptr<Object> self)
+{
+  // Prologue
+  CallFrame* previous_frame = current_frame;
+  current_frame = new CallFrame(cls, method);
+  current_frame->PassParameters(std::move(params));
+  
+  if (!method->is_static) {
+    current_frame->SetThis(std::move(self));
+  }
+  
+  // Actual call
+  method->statements->Accept(this);
+  
+  // Epilogue
+  auto ret = std::move(current_frame->return_value);
+  current_frame = previous_frame;
+  return ret;
+}
+
+void Executor::Assign(Symbol* var, std::shared_ptr<Object> value) {
+  try {
+    std::string name = var->GetName();
+    current_frame->VarSet(std::move(value), name);
+  } catch (std::out_of_range& e) {
+    std::cerr << "[!] Assignment to undeclared variable";
+    exit(1);
+  }
+}
+
+void Executor::Decl(Symbol* var) {
+  std::string name = var->GetName();
+  current_frame->AddVariable(name);
+}
+
+std::shared_ptr<Object> Executor::Value(Symbol* var) {
+  try {
+    return current_frame->VarGet(var->GetName());
+  } catch (std::out_of_range& e) {
+    std::cerr << "[!] Accessing undeclared variable";
+    exit(1);
+  }
+}
+
+/*void Executor::Assign(Symbol* var, int value) {
+  try {
+    std::string name = var->GetName();
+    vars_.at(name) = value;
+  } catch (std::out_of_range& e) {
+    std::cerr << "[!] Assignment to undeclared variable";
+    exit(1);
+  }
+}
+
+void Executor::Decl(Symbol* var) {
+  std::string name = var->GetName();
+  vars_.insert({name, 0});
+}
+
+int Executor::Value(Symbol* var) {
+  int res = 0;
+  try {
+    res = vars_.at(var->GetName());
+  } catch (std::out_of_range& e) {
+    std::cerr << "[!] Accessing undeclared variable";
+    exit(1);
+  }
+  
+  return res;
+}*/
 
 } // namespace Visitor

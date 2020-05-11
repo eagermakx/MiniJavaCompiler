@@ -7,6 +7,8 @@
 
 class UninitObject : public Object {
  public:
+  UninitObject() : Object(nullptr) {}
+  
   int ToInt() override;
 };
 

@@ -15,6 +15,10 @@ Class::Class(std::string label, ClassBody *body)
     fields_offsets.emplace(field, current_offset);
     current_offset += 1;
   }
+  
+  for (auto* method : methods) {
+    method->owner = this;
+  }
 }
 
 void Class::Accept(Visitor::Base *visitor) {

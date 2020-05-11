@@ -24,6 +24,7 @@ class ClassMethod : public Decl::Base {
   std::string name;
   std::vector<FuncParameter> parameters;
   Stmt::List* statements;
+  Class* owner;
   
   bool is_static{false};
 };

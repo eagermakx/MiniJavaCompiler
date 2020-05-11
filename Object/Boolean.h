@@ -4,10 +4,11 @@
 
 #pragma once
 #include "Object.h"
+#include <Type/Types.h>
 
 class Boolean : public Object {
  public:
-  explicit Boolean(bool val) : value_(val) {}
+  explicit Boolean(bool val) : Object(new Bool()), value_(val) {}
   
   int ToInt() override;
  

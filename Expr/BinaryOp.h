@@ -22,7 +22,7 @@ namespace Expr {
   class BinaryOp : public Expr::Base {
    public:
     BinaryOp(BinOperationType type, Expr::Base* left, Expr::Base* right)
-      : op(BinOpByType(type)), type(type), left(left), right(right) {}
+      : op(BinOpByType(type)), operation_type(type), left(left), right(right) {}
       
     ~BinaryOp() override = default;
     
@@ -37,7 +37,7 @@ namespace Expr {
     Expr::Base* left;
     Expr::Base* right;
     
-    BinOperationType type;
+    BinOperationType operation_type;
     ExprBinOp op;
   };
   

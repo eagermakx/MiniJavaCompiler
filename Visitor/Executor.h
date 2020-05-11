@@ -5,10 +5,11 @@
 #pragma once
 
 #include "Visitor.h"
-#include "ast_decl.h"
-#include "SymbolTable/Symbol.h"
 
+#include <ast_decl.h>
+#include <SymbolTable/Symbol.h>
 #include <unordered_map>
+#include <Functions/CallFrame.h>
 
 namespace Visitor {
 
@@ -21,9 +22,9 @@ class Executor : public Visitor::Base {
   int CalcExpr(Expr::Base* expr);
   
   // Variables
-  void Assign(Symbol* var, int value);
+  void Assign(Symbol* var, std::shared_ptr<Object> value);
   void Decl(Symbol* var);
-  int Value(Symbol* var);
+  std::shared_ptr<Object> Value(Symbol* var);
   
   void Visit(Class* class_decl) override;
   void Visit(ClassMethod* method) override;
@@ -51,9 +52,13 @@ class Executor : public Visitor::Base {
   void Visit(Stmt::ExprStmt* stmt_expr) override;
  
  private:
+  std::shared_ptr<Object> CallMethod(Class* cls, ClassMethod* method, std::vector<std::shared_ptr<Object>>&& params, std::shared_ptr<Object> self = nullptr);
+  
   std::unordered_map<std::string, int> vars_{};
   int return_value_{0};
   int temp_register_{0};
+  
+  CallFrame* current_frame{nullptr};
 };
   
 } // namespace Visitor

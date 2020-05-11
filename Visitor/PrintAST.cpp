@@ -103,7 +103,7 @@ std::string Repr(Expr::UnOperationType type) {
 }
 
 void Visitor::PrintAST::Visit(Expr::BinaryOp *that) {
-  int node = CreateNodeAndLink(Repr(that->type));
+  int node = CreateNodeAndLink(Repr(that->operation_type));
   
   PushNode(node);
   that->left->Accept(this);

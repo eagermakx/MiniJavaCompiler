@@ -7,12 +7,12 @@
 
 class Object {
  public:
-  // explicit Object(Type* type) : type(type) {}
-  Object() = default;
+  explicit Object(Type* type) : type(type) {}
   
   virtual ~Object() = default;
-  
   virtual int ToInt() = 0;
+  
+  Type* type;
 };
 
 std::shared_ptr<Object> CreateObjectFromType(Type* type);

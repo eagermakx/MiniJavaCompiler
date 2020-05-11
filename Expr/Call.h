@@ -17,6 +17,7 @@ class Call : public Expr::Base {
  public:
   std::string method_name;
   ClassMethod* actual;
+  Class* cls;
   Expr::Base* expr;
 };
 

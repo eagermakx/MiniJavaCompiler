@@ -6,6 +6,7 @@
 #include <ast.h>
 #include <log.h>
 #include <iostream>
+#include <Type/Types.h>
 
 #include "TypeChecker.h"
 
@@ -58,6 +59,8 @@ void Visitor::TypeChecker::Visit(Expr::BinaryOp *binary_op) {
   if (!IsInt(binary_op->left->type) || !IsInt(binary_op->right->type)) {
     std::cerr << "No matching operator for operands " << Repr(binary_op->left->type) << " and " << Repr(binary_op->right->type) << std::endl;
   }
+  
+  binary_op->type = new Int();
 }
 
 void Visitor::TypeChecker::Visit(Expr::Const *const_expr) {
@@ -151,14 +154,18 @@ void Visitor::TypeChecker::Visit(Expr::Call *call) {
   call->expr->Accept(this);
   
   if (IsPrimitive(call->expr->type)) {
-    std::cerr << "Call on primitive type, no such method" << std::endl;
+    std::cerr << "Call on primitive type" << std::endl;
     exit(1);
   }
   
-  UserType* user_type = static_cast<UserType*>(call->expr->type);
+  UserType* user_type = (UserType*)call->expr->type;
+  user_type->instance_of = symbol_table_->FindClass(user_type->class_name);
+  
   ClassMethod* method = symbol_table_->FindMethod(user_type->instance_of, call->method_name);
   
-  // TODO ::::: NOW CALL !!!!!
+  call->actual = method;
+  call->cls = user_type->instance_of;
+  call->type = method->out;
  }
 
 void Visitor::TypeChecker::Visit(Stmt::ExprStmt *stmt_expr) {

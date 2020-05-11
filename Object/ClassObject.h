@@ -7,13 +7,15 @@
 #include <Decl/Class.h>
 #include "Object.h"
 
-class ClassObject {
+class ClassObject : public Object {
  public:
   explicit ClassObject(Class* class_);
-  ~ClassObject() = default;
+  ~ClassObject() override = default;
   
   std::shared_ptr<Object> AccessField(ClassField* field);
   
+  int ToInt() override;
+ 
  public:
   Class* instance_of;
  

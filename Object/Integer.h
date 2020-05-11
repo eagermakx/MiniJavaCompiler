@@ -9,7 +9,7 @@
 
 class Integer : public Object {
  public:
-  explicit Integer(int val) : value_(val) {}
+  explicit Integer(int val) : Object(new Int()), value_(val) {}
   
   int ToInt() override;
   

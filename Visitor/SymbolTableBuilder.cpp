@@ -25,8 +25,11 @@ void Visitor::SymbolTableBuilder::Process(Program *program) {
 void Visitor::SymbolTableBuilder::Visit(Program *program) {
   
   for (auto* cls : program->classes) {
-    cls->Accept(this);
     symbol_table_->AddClass(cls);
+  }
+  
+  for (auto* cls : program->classes) {
+    cls->Accept(this);
   }
   
   program->main_class->Accept(this);
