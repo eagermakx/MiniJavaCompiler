@@ -17,6 +17,8 @@
 #include "Expr/Id.h"
 #include "Expr/Const.h"
 #include "Expr/This.h"
+#include "Expr/Call.h"
+#include "Expr/New.h"
 
 #include "Stmt/List.h"
 #include "Stmt/ScopedList.h"
@@ -25,8 +27,6 @@
 #include "Stmt/Ret.h"
 #include "Stmt/VarDecl.h"
 #include "Stmt/Cond.h"
-#include "Stmt/New.h"
-#include "Stmt/Call.h"
 
 #include "Decl/Class.h"
 #include "Decl/ClassBody.h"

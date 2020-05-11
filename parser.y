@@ -193,7 +193,7 @@ expression:
     | "this" { $$ = new Expr::This(); }
     | "true" { $$ = new Expr::Const(1); }
     | "false" { $$ = new Expr::Const(0); }
-    | var_id "." "identifier" "(" ")" {};
+    | var_id "." "identifier" "(" ")" {  };
 
 /*method_invocation:
 	expression "." "identifier" "(" ")" {};*/

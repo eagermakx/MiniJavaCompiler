@@ -32,6 +32,7 @@ namespace Visitor {
     void Visit(Expr::Id* rvalue) override;
     void Visit(Expr::This* this_expr) override;
     void Visit(Expr::UnaryOp* unary_op) override;
+    void Visit(Expr::Call* call) override;
   
     void Visit(Stmt::Assign* assn) override;
     void Visit(Stmt::Cond* cond) override;
@@ -40,8 +41,7 @@ namespace Visitor {
     void Visit(Stmt::List* list) override;
     void Visit(Stmt::VarDecl* var_decl) override;
     void Visit(Stmt::ScopedList* scoped_list) override;
-    void Visit(Stmt::New* new_stmt) override;
-    void Visit(Stmt::Call* call) override;
+    void Visit(Expr::New* new_stmt) override;
  
    private:
     void GraphPrologue();

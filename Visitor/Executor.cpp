@@ -167,11 +167,11 @@ void Executor::Visit(MainClass *main_class) {
 
 }
 
-void Executor::Visit(Stmt::New *new_stmt) {
+void Executor::Visit(Expr::New *new_stmt) {
 
 }
 
-void Executor::Visit(Stmt::Call *call) {
+void Executor::Visit(Expr::Call *call) {
 
 }
 

@@ -3,20 +3,20 @@
 //
 
 #pragma once
-#include "Stmt.h"
+#include "Expr.h"
 #include <Expr/Id.h>
 
-namespace Stmt {
+namespace Expr {
 
-class New : public Stmt::Base {
+class Call : public Expr::Base {
  public:
-  explicit New(std::string class_name);
+  Call(Expr::Id* id, std::string method);
   
   void Accept(Visitor::Base *visitor) override;
  
  public:
-  Class* cls{nullptr};
-  std::string class_name;
+  std::string method;
+  Expr::Id* id;
 };
 
 }

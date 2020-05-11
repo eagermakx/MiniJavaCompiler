@@ -13,6 +13,8 @@ namespace Expr {
   class Const;
   class Id;
   class This;
+  class Call;
+  class New;
 }
 
 namespace Stmt {
@@ -24,8 +26,6 @@ namespace Stmt {
   class VarDecl;
   class List;
   class ScopedList;
-  class Call;
-  class New;
 }
 
 namespace Decl {

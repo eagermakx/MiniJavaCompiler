@@ -183,11 +183,11 @@ void Visitor::SymbolTableBuilder::Visit(MainClass *main_class) {
   main_class->GetMainFunction()->Accept(this);
 }
 
-void Visitor::SymbolTableBuilder::Visit(Stmt::New *new_stmt) {
+void Visitor::SymbolTableBuilder::Visit(Expr::New *new_stmt) {
 
 }
 
-void Visitor::SymbolTableBuilder::Visit(Stmt::Call *call) {
+void Visitor::SymbolTableBuilder::Visit(Expr::Call *call) {
 
 }
 

@@ -261,11 +261,11 @@ void Visitor::PrintAST::Visit(MainClass *main_class) {
   PopNode();
 }
 
-void Visitor::PrintAST::Visit(Stmt::New *new_stmt) {
+void Visitor::PrintAST::Visit(Expr::New *new_stmt) {
 
 }
 
-void Visitor::PrintAST::Visit(Stmt::Call *call) {
+void Visitor::PrintAST::Visit(Expr::Call *call) {
 
 }
 

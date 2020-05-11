@@ -139,10 +139,10 @@ Type *Visitor::TypeChecker::GetVariableType(Symbol *symbol) {
   return symbol_types.at(*symbol);
 }
 
-void Visitor::TypeChecker::Visit(Stmt::New *new_stmt) {
+void Visitor::TypeChecker::Visit(Expr::New *new_stmt) {
 
 }
 
-void Visitor::TypeChecker::Visit(Stmt::Call *call) {
+void Visitor::TypeChecker::Visit(Expr::Call *call) {
 
 }
