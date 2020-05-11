@@ -167,12 +167,16 @@ void Executor::Visit(MainClass *main_class) {
 
 }
 
-void Executor::Visit(Expr::New *new_stmt) {
-
+void Executor::Visit(Expr::New *new_expr) {
+  new_expr->pointer = CreateObjectFromType(new_expr->type);
 }
 
 void Executor::Visit(Expr::Call *call) {
+  call->
+}
 
+void Executor::Visit(Stmt::ExprStmt *stmt_expr) {
+  stmt_expr->expr->Accept(this);
 }
 
 } // namespace Visitor

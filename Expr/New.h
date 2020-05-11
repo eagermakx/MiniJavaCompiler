@@ -3,12 +3,12 @@
 //
 
 #pragma once
-#include "Stmt/Stmt.h"
+#include "Expr.h"
 #include <Expr/Id.h>
 
 namespace Expr {
 
-class New : public Stmt::Base {
+class New : public Expr::Base {
  public:
   explicit New(std::string class_name);
   

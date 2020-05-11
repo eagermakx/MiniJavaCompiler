@@ -18,7 +18,16 @@ std::string Repr(Type* type) {
 
 bool SameType(Type* lhs, Type* rhs) {
   assert(lhs && rhs);
-  return lhs->type == rhs->type;
+  bool ans;
+  if (lhs->type == rhs->type) {
+    if (lhs->type == Type::PossibleTypes::UserType) {
+      return ((UserType*)lhs)->class_name == ((UserType*)rhs)->class_name;
+    } else {
+      return true;
+    }
+  } else {
+    return false;
+  }
 }
 
 bool IsInt(Type* type) {

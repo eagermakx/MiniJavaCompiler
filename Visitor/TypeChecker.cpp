@@ -139,10 +139,28 @@ Type *Visitor::TypeChecker::GetVariableType(Symbol *symbol) {
   return symbol_types.at(*symbol);
 }
 
-void Visitor::TypeChecker::Visit(Expr::New *new_stmt) {
-
+void Visitor::TypeChecker::Visit(Expr::New *new_expr) {
+  UserType* type = new UserType(new_expr->class_name);
+  type->instance_of = symbol_table_->FindClass(new_expr->class_name);
+  
+  new_expr->type = type;
+  
 }
 
 void Visitor::TypeChecker::Visit(Expr::Call *call) {
+  call->expr->Accept(this);
+  
+  if (IsPrimitive(call->expr->type)) {
+    std::cerr << "Call on primitive type, no such method" << std::endl;
+    exit(1);
+  }
+  
+  UserType* user_type = static_cast<UserType*>(call->expr->type);
+  ClassMethod* method = symbol_table_->FindMethod(user_type->instance_of, call->method_name);
+  
+  // TODO ::::: NOW CALL !!!!!
+ }
 
+void Visitor::TypeChecker::Visit(Stmt::ExprStmt *stmt_expr) {
+  stmt_expr->expr->Accept(this);
 }

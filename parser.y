@@ -92,6 +92,7 @@
 %token <int> NUMBER "number"
 %nterm <Expr::Base*> expression
 %nterm <Expr::Id*> var_id
+%nterm <Expr::Base*> uniform_expression
 // %nterm <Expr::Const*> literal
 // %nterm <Expr::rvalue*> rvalue
 // %nterm <Expr::lvalue*> lvalue
@@ -171,6 +172,7 @@ statement:
     | "return" expression ";" { $$ = new Stmt::Ret($2); }
     | "{" statements "}" { $$ = new Stmt::ScopedList($2); };
     | if_else_stmt { $$ = $1; }
+    | expression ";" { $$ = new Stmt::ExprStmt($1); }
 
 if_else_stmt:
     "if" "(" expression ")" statement { $$ = new Stmt::Cond($3, $5, nullptr); }
@@ -186,14 +188,18 @@ expression:
     | expression "-" expression { $$ = Expr::BinaryOp::Sub($1, $3); }
     | expression "*" expression { $$ = Expr::BinaryOp::Mul($1, $3); }
     | expression "/" expression { $$ = Expr::BinaryOp::Div($1, $3); }
-    | "!" expression { $$ = Expr::UnaryOp::Not($2); }
-    | "(" expression ")" { $$ = $2; }
-    | var_id { $$ = $1; }
+	| "!" expression { $$ = Expr::UnaryOp::Not($2); }
     | "number" { $$ = new Expr::Const($1); }
     | "this" { $$ = new Expr::This(); }
     | "true" { $$ = new Expr::Const(1); }
     | "false" { $$ = new Expr::Const(0); }
-    | var_id "." "identifier" "(" ")" {  };
+    | uniform_expression { $$ = $1; };
+
+uniform_expression:
+    "(" expression ")" { $$ = $2; }
+    | var_id { $$ = $1; }
+    | "new" "identifier" "(" ")" { $$ = new Expr::New($2); }
+    | uniform_expression "." "identifier" "(" ")" { $$ = new Expr::Call($1, $3); };
 
 /*method_invocation:
 	expression "." "identifier" "(" ")" {};*/

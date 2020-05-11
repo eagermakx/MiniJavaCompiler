@@ -6,7 +6,7 @@
 
 namespace Expr {
 
-Call::Call(Expr::Id *id, std::string method) : method(std::move(method)), id(id) {
+Call::Call(Expr::Base* expr, std::string method) : method_name(std::move(method)), expr(expr) {
 }
 
 void Call::Accept(Visitor::Base *visitor) {

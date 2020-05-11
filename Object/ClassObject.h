@@ -13,8 +13,6 @@ class ClassObject {
   ~ClassObject() = default;
   
   std::shared_ptr<Object> AccessField(ClassField* field);
- 
-  static std::shared_ptr<Object> ObjectFromType(Type* type);
   
  public:
   Class* instance_of;

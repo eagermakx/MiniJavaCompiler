@@ -4,6 +4,7 @@
 
 #pragma once
 #include "Visitor.h"
+#include "SymbolTable/Table.h"
 
 #include <unordered_map>
 
@@ -11,6 +12,8 @@ namespace Visitor {
 
 class TypeChecker : public Visitor::Base {
  public:
+  explicit TypeChecker(Table* table) : symbol_table_(table) {}
+  
   void Run(Program* program);
   
   void Visit(Program* program) override;
@@ -27,7 +30,7 @@ class TypeChecker : public Visitor::Base {
   void Visit(Expr::This* this_expr) override;
   void Visit(Expr::UnaryOp* unary_op) override;
   void Visit(Expr::Call* call) override;
-  void Visit(Expr::New* new_stmt) override;
+  void Visit(Expr::New* new_expr) override;
   
   void Visit(Stmt::Assign* assn) override;
   void Visit(Stmt::Cond* cond) override;
@@ -36,13 +39,15 @@ class TypeChecker : public Visitor::Base {
   void Visit(Stmt::List* list) override;
   void Visit(Stmt::VarDecl* var_decl) override;
   void Visit(Stmt::ScopedList* scoped_list) override;
- 
- public:
+  void Visit(Stmt::ExprStmt* stmt_expr) override;
+  
   void AddVariable(Symbol* symbol, Type* type);
   Type* GetVariableType(Symbol* symbol);
   
+ private:
   std::unordered_map<Symbol, Type*> symbol_types;
-  ClassMethod* current_method;
+  ClassMethod* current_method{nullptr};
+  Table* symbol_table_;
 };
 
 }

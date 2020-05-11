@@ -17,13 +17,13 @@ namespace Visitor {
 
 class SymbolTableBuilder : public Visitor::Base {
  public:
-  SymbolTableBuilder() = default;
+  explicit SymbolTableBuilder(Table* symbol_table);
   
   void Process(Program* program);
   
   void Visit(Program* program) override;
   
-  void Visit(Class* class_decl) override;
+  void Visit(Class* cls) override;
   void Visit(ClassMethod* method) override;
   void Visit(ClassField* field) override;
   void Visit(ProgramBody* body) override;
@@ -35,7 +35,7 @@ class SymbolTableBuilder : public Visitor::Base {
   void Visit(Expr::This* this_expr) override;
   void Visit(Expr::UnaryOp* unary_op) override;
   void Visit(Expr::Call* call) override;
-  void Visit(Expr::New* new_stmt) override;
+  void Visit(Expr::New* new_expr) override;
   
   void Visit(Stmt::Assign* assn) override;
   void Visit(Stmt::Cond* cond) override;
@@ -44,6 +44,7 @@ class SymbolTableBuilder : public Visitor::Base {
   void Visit(Stmt::List* list) override;
   void Visit(Stmt::VarDecl* var_decl) override;
   void Visit(Stmt::ScopedList* scoped_list) override;
+  void Visit(Stmt::ExprStmt* stmt_expr) override;
  
  private:
   void FindDefinition(Expr::Id* id);
@@ -52,6 +53,8 @@ class SymbolTableBuilder : public Visitor::Base {
   std::vector<ScopeTree*> trees_;
   ScopeTree* current_tree_{nullptr};
   std::stack<VariableScope*> scopes_;
+  
+  Table* symbol_table_;
 };
 
 } // namespace Visitor

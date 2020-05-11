@@ -14,3 +14,5 @@ class Object {
   
   virtual int ToInt() = 0;
 };
+
+std::shared_ptr<Object> CreateObjectFromType(Type* type);

@@ -70,7 +70,11 @@ void Visitor::PrintAST::Visit(Expr::Const *that) {
 void Visitor::PrintAST::Visit(Expr::Id *that) {
   std::string label;
   
-  label = that->symbol->GetName();
+  if (that->symbol) {
+    label = that->symbol->GetName();
+  } else {
+    label = "(undefined_symbol)" + that->identifier;
+  }
   // std::cout << " :::: " << label << std::endl;
   
   CreateNodeAndLink(label);
@@ -261,12 +265,20 @@ void Visitor::PrintAST::Visit(MainClass *main_class) {
   PopNode();
 }
 
-void Visitor::PrintAST::Visit(Expr::New *new_stmt) {
-
+void Visitor::PrintAST::Visit(Expr::New *new_expr) {
+  int node = CreateNodeAndLink("new " + new_expr->class_name);
 }
 
 void Visitor::PrintAST::Visit(Expr::Call *call) {
+  int node = CreateNodeAndLink("Call");
+  PushNode(node);
+  call->expr->Accept(this);
+  int function_name = CreateNodeAndLink(call->method_name + "()");
+  PopNode();
+}
 
+void Visitor::PrintAST::Visit(Stmt::ExprStmt *stmt_expr) {
+  stmt_expr->expr->Accept(this);
 }
 
 

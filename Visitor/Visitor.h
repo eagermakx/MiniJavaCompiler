@@ -23,8 +23,9 @@ namespace Visitor {
     virtual void Visit(Expr::This* this_expr) = 0;
     virtual void Visit(Expr::UnaryOp* unary_op) = 0;
     virtual void Visit(Expr::Call* call) = 0;
-    virtual void Visit(Expr::New* new_stmt) = 0;
+    virtual void Visit(Expr::New* new_expr) = 0;
     
+    virtual void Visit(Stmt::ExprStmt* stmt_expr) = 0;
     virtual void Visit(Stmt::Assign* assn) = 0;
     virtual void Visit(Stmt::Cond* cond) = 0;
     virtual void Visit(Stmt::Print* print) = 0;

@@ -15,25 +15,23 @@
 
 class Table {
  public:
-  struct SymbolInfo {
-    BaseNode* assigned_node;
-    Symbol::SymbolType type;
-  };
-  
- public:
   Table() = default;
   
-  void AddClassMethod(ClassMethod* method, Class* owner);
-  void AddClassField(ClassField* field, Class* owner);
-  void AddClass(Class* c);
+  void AddClass(Class* cls);
+  Class* FindClass(const std::string &name);
+  bool ClassExists(const std::string &name);
   
-  bool IsDefined(Symbol* symbol, Symbol::SymbolType type);
+  void AddMethod(Class* owner, ClassMethod* method);
+  ClassMethod* FindMethod(Class* owner, const std::string& method_name);
+  bool MethodExists(Class* owner, const std::string& method_name);
+  
+  void PrintTable();
  
  private:
-  void AddSymbol(Symbol* symbol, BaseNode* node, Symbol::SymbolType type);
-  void AssignSymbol(Symbol* symbol, const std::string& name, VariableScope* parent);
+  std::string MethodId(Class* owner, const std::string& method_name);
   
  private:
-  std::unordered_map<Symbol, SymbolInfo> hash_map_;
+  std::unordered_map<std::string, Class*> defined_classes_;
+  std::unordered_map<std::string, ClassMethod*> methods_;
 };
 

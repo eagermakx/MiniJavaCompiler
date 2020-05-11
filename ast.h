@@ -27,6 +27,7 @@
 #include "Stmt/Ret.h"
 #include "Stmt/VarDecl.h"
 #include "Stmt/Cond.h"
+#include "Stmt/ExprStmt.h"
 
 #include "Decl/Class.h"
 #include "Decl/ClassBody.h"

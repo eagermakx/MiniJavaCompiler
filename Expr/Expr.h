@@ -7,12 +7,14 @@
 #include "BaseNode.h"
 #include "Visitor/Visitor.h"
 #include "Type/Type.h"
+#include "Object/Object.h"
 
 namespace Expr {
 
 class Base : public BaseNode {
  public:
   Type* type{nullptr};
+  std::shared_ptr<Object> pointer;
 };
 
 }

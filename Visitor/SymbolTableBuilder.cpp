@@ -13,14 +13,20 @@
 #include "log.h"
 #include "ast.h"
 
+Visitor::SymbolTableBuilder::SymbolTableBuilder(Table *symbol_table) : symbol_table_(symbol_table) {
+}
+
 void Visitor::SymbolTableBuilder::Process(Program *program) {
   Visit(program);
+  
+  symbol_table_->PrintTable();
 }
 
 void Visitor::SymbolTableBuilder::Visit(Program *program) {
   
-  for (auto* class_ : program->classes) {
-    class_->Accept(this);
+  for (auto* cls : program->classes) {
+    cls->Accept(this);
+    symbol_table_->AddClass(cls);
   }
   
   program->main_class->Accept(this);
@@ -148,9 +154,10 @@ void Visitor::SymbolTableBuilder::FindDefinition(Expr::Id *id) {
   LOG("Stack size = " << current_tree_->scope_shadowing_map_.at(var).size());
 }
 
-void Visitor::SymbolTableBuilder::Visit(Class *class_decl) {
-  for (auto* method : class_decl->methods) {
+void Visitor::SymbolTableBuilder::Visit(Class *cls) {
+  for (auto* method : cls->methods) {
     method->Accept(this);
+    symbol_table_->AddMethod(cls, method);
   }
 }
 
@@ -183,11 +190,14 @@ void Visitor::SymbolTableBuilder::Visit(MainClass *main_class) {
   main_class->GetMainFunction()->Accept(this);
 }
 
-void Visitor::SymbolTableBuilder::Visit(Expr::New *new_stmt) {
-
+void Visitor::SymbolTableBuilder::Visit(Expr::New *new_expr) {
+  new_expr->cls = symbol_table_->FindClass(new_expr->class_name);
 }
 
 void Visitor::SymbolTableBuilder::Visit(Expr::Call *call) {
-
+  call->expr->Accept(this);
 }
 
+void Visitor::SymbolTableBuilder::Visit(Stmt::ExprStmt *stmt_expr) {
+  stmt_expr->expr->Accept(this);
+}

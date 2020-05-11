@@ -23,10 +23,12 @@ int Driver::Parse(const std::string& f) {
     int res = parser();
     scan_end();
   
-    Visitor::SymbolTableBuilder symtable_builder;
+    Table symbol_table;
+    
+    Visitor::SymbolTableBuilder symtable_builder(&symbol_table);
     symtable_builder.Process(program);
     
-    Visitor::TypeChecker type_checker;
+    Visitor::TypeChecker type_checker(&symbol_table);
     type_checker.Run(program);
     
     return res;

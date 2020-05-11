@@ -10,13 +10,14 @@ namespace Expr {
 
 class Call : public Expr::Base {
  public:
-  Call(Expr::Id* id, std::string method);
+  Call(Expr::Base* expr, std::string method);
   
   void Accept(Visitor::Base *visitor) override;
  
  public:
-  std::string method;
-  Expr::Id* id;
+  std::string method_name;
+  ClassMethod* actual;
+  Expr::Base* expr;
 };
 
 }
