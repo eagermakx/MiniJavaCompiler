@@ -1,7 +1,7 @@
 #include <driver.hh>
 #include <parser.hh>
 #include <Visitor/PrintAST.h>
-#include <Visitor/Executor.h>
+#include <Visitor/Interpreter.h>
 #include <Visitor/SymbolTableBuilder.h>
 #include <Visitor/TypeChecker.h>
 #include <log.h>
@@ -56,7 +56,7 @@ void Driver::PrintAST(const std::string& filename) {
 }
 
 int Driver::Run() {
-  Visitor::Executor interpreter;
+  Visitor::Interpreter interpreter;
   return interpreter.Run(program);
 }
 

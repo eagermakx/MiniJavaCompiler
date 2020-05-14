@@ -14,7 +14,7 @@ void CallFrame::PassParameters(std::vector<std::shared_ptr<Object>>&& parameters
   auto params = std::move(parameters);
   
   int num_params_passed = params.size();
-  int num_params_real = method_->parameters.size();
+  int num_params_real = method_->params.size();
   
   if (num_params_passed != num_params_real) {
     std::cerr << cls_->name << "." << method_->name << " : expected "
@@ -22,9 +22,12 @@ void CallFrame::PassParameters(std::vector<std::shared_ptr<Object>>&& parameters
   }
   
   for (int i = 0; i < num_params_real; ++i) {
-    assert(SameType(params[i]->type, method_->parameters[i].type));
-    AddVariable(method_->parameters[i].name);
-    VarSet(params[i], method_->parameters[i].name);
+    assert(SameType(params[i]->type, method_->params[i].type));
+    
+    std::string var_label = method_->params[i].symbol->GetLabel();
+    
+    AddVariable(var_label);
+    VarSet(params[i], var_label);
   }
 }
 
@@ -64,4 +67,12 @@ void CallFrame::AddVariable(const std::string &name) {
 
 void CallFrame::SetReturnValue(std::shared_ptr<Object> object) {
   return_value = std::move(object);
+}
+
+bool CallFrame::IsStatic() {
+  return method_->is_static;
+}
+
+std::shared_ptr<Object> CallFrame::GetThis() {
+  return self_;
 }

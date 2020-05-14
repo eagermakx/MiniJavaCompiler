@@ -9,7 +9,7 @@
 
 ClassMethod::ClassMethod(Type *out, std::string name, FuncParamList *params, Stmt::List *list, bool is_static)
     : out(out),
-      parameters(std::move(params->parameters)),
+      params(std::move(params->params)),
       name(std::move(name)),
       statements(list),
       is_static(is_static) {
@@ -22,9 +22,9 @@ void ClassMethod::Accept(Visitor::Base *visitor) {
 std::string ClassMethod::Representation() {
   std::string ans = Repr(out) + " " + name + "(";
   
-  for (int i = 0; i < parameters.size(); ++i) {
-    ans += Repr(parameters[i].type) + " " + parameters[i].name;
-    if (i != parameters.size() - 1) {
+  for (int i = 0; i < params.size(); ++i) {
+    ans += Repr(params[i].type) + " " + params[i].name;
+    if (i != params.size() - 1) {
       ans += ", ";
     }
   }

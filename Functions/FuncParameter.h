@@ -5,6 +5,7 @@
 #pragma once
 
 #include <string>
+#include <SymbolTable/Symbol.h>
 
 #include "Type/Type.h"
 
@@ -14,4 +15,5 @@ class FuncParameter {
   
   Type* type;
   std::string name;
+  Symbol* symbol{nullptr};
 };

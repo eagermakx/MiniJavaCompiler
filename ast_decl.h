@@ -41,6 +41,7 @@ class ClassMethod;
 class MainClass;
 class FuncParamList;
 class FuncParameter;
+class CallParamList;
 
 class Type;
 class Int;

@@ -34,6 +34,11 @@ void Visitor::TypeChecker::Visit(Class *class_decl) {
 
 void Visitor::TypeChecker::Visit(ClassMethod *method) {
   current_method = method;
+  
+  for (auto& param : method->params) {
+    AddVariableType(param.symbol, param.type);
+  }
+  
   method->statements->Accept(this);
   current_method = nullptr;
 }
@@ -121,7 +126,7 @@ void Visitor::TypeChecker::Visit(Stmt::List *list) {
 }
 
 void Visitor::TypeChecker::Visit(Stmt::VarDecl *var_decl) {
-  AddVariable(var_decl->var_id->symbol, var_decl->var_id->type);
+  AddVariableType(var_decl->var_id->symbol, var_decl->var_id->type);
 }
 
 void Visitor::TypeChecker::Visit(Stmt::ScopedList *scoped_list) {
@@ -130,13 +135,13 @@ void Visitor::TypeChecker::Visit(Stmt::ScopedList *scoped_list) {
   }
 }
 
-void Visitor::TypeChecker::AddVariable(Symbol *symbol, Type *type) {
+void Visitor::TypeChecker::AddVariableType(Symbol *symbol, Type *type) {
   symbol_types.insert({*symbol, type});
 }
 
 Type *Visitor::TypeChecker::GetVariableType(Symbol *symbol) {
   if (symbol_types.find(*symbol) == symbol_types.end()) {
-    std::cerr << "[TypeChecker] Symbol not found" << std::endl;
+    std::cerr << "[TypeChecker] Can't resolve type" << std::endl;
   }
   
   return symbol_types.at(*symbol);
@@ -152,6 +157,9 @@ void Visitor::TypeChecker::Visit(Expr::New *new_expr) {
 
 void Visitor::TypeChecker::Visit(Expr::Call *call) {
   call->expr->Accept(this);
+  for (auto& expr : call->passed_params->params) {
+    expr->Accept(this);
+  }
   
   if (IsPrimitive(call->expr->type)) {
     std::cerr << "Call on primitive type" << std::endl;
@@ -166,8 +174,27 @@ void Visitor::TypeChecker::Visit(Expr::Call *call) {
   call->actual = method;
   call->cls = user_type->instance_of;
   call->type = method->out;
+  
+  CheckFunctionParams(method, call->passed_params);
  }
 
 void Visitor::TypeChecker::Visit(Stmt::ExprStmt *stmt_expr) {
   stmt_expr->expr->Accept(this);
+}
+
+void Visitor::TypeChecker::CheckFunctionParams(ClassMethod *method, CallParamList *got) {
+  int num_expected = method->params.size();
+  int num_got = got->params.size();
+  
+  if (num_expected != num_got) {
+    std::cerr << "Invalid number of parameters: expected " << num_expected << ", got " << num_got << std::endl;
+    exit(1);
+  }
+  
+  for (int i = 0; i < num_expected; ++i) {
+    if (!SameType(method->params[i].type, got->params[i]->type)) {
+      std::cerr << "Function call: expected " << Repr(method->params[i].type) << ", got " << Repr(got->params[i]->type) << std::endl;
+      exit(1);
+    }
+  }
 }

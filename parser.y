@@ -113,6 +113,7 @@
 
 %nterm <FuncParamList*> parameter_list
 %nterm <FuncParameter*> func_parameter
+%nterm <CallParamList*> call_param_list
 
 %nterm <Type*> type
 
@@ -190,7 +191,6 @@ expression:
     | expression "/" expression { $$ = Expr::BinaryOp::Div($1, $3); }
 	| "!" expression { $$ = Expr::UnaryOp::Not($2); }
     | "number" { $$ = new Expr::Const($1); }
-    | "this" { $$ = new Expr::This(); }
     | "true" { $$ = new Expr::Const(1); }
     | "false" { $$ = new Expr::Const(0); }
     | uniform_expression { $$ = $1; };
@@ -198,8 +198,13 @@ expression:
 uniform_expression:
     "(" expression ")" { $$ = $2; }
     | var_id { $$ = $1; }
+    | "this" { $$ = new Expr::This(); }
     | "new" "identifier" "(" ")" { $$ = new Expr::New($2); }
-    | uniform_expression "." "identifier" "(" ")" { $$ = new Expr::Call($1, $3); };
+    | uniform_expression "." "identifier" "(" call_param_list ")" { $$ = new Expr::Call($1, $3, $5); };
+
+call_param_list:
+	%empty { $$ = new CallParamList(); }
+	| call_param_list expression { $1->AddParameter($2); $$ = $1; }
 
 /*method_invocation:
 	expression "." "identifier" "(" ")" {};*/

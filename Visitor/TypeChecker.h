@@ -40,9 +40,11 @@ class TypeChecker : public Visitor::Base {
   void Visit(Stmt::VarDecl* var_decl) override;
   void Visit(Stmt::ScopedList* scoped_list) override;
   void Visit(Stmt::ExprStmt* stmt_expr) override;
-  
-  void AddVariable(Symbol* symbol, Type* type);
+ 
+ private:
+  void AddVariableType(Symbol* symbol, Type* type);
   Type* GetVariableType(Symbol* symbol);
+  void CheckFunctionParams(ClassMethod *method, CallParamList* got);
   
  private:
   std::unordered_map<Symbol, Type*> symbol_types;

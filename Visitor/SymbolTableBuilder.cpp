@@ -19,7 +19,7 @@ Visitor::SymbolTableBuilder::SymbolTableBuilder(Table *symbol_table) : symbol_ta
 void Visitor::SymbolTableBuilder::Process(Program *program) {
   Visit(program);
   
-  symbol_table_->PrintTable();
+  // symbol_table_->PrintTable();
 }
 
 void Visitor::SymbolTableBuilder::Visit(Program *program) {
@@ -29,6 +29,7 @@ void Visitor::SymbolTableBuilder::Visit(Program *program) {
   }
   
   for (auto* cls : program->classes) {
+    current_class_ = cls;
     cls->Accept(this);
   }
   
@@ -133,7 +134,9 @@ void Visitor::SymbolTableBuilder::Visit(Stmt::Ret *that) {
 }
 
 void Visitor::SymbolTableBuilder::Visit(Stmt::VarDecl *that) {
-  VariableScope* current_scope = scopes_.top();
+  that->var_id->symbol = AddVarAt(scopes_.top(), that->var_id->identifier);
+  
+  /*VariableScope* current_scope = scopes_.top();
   std::string var_name = that->var_id->identifier;
   
   // Will terminate if that variable was defined previously
@@ -141,7 +144,7 @@ void Visitor::SymbolTableBuilder::Visit(Stmt::VarDecl *that) {
   current_tree_->DefineVariable(current_scope, var_name);
   
   that->var_id->symbol = new Symbol(current_scope, var_name);
-  that->var_id->symbol->AssignLabel(current_scope->GetFullLabel() + "::" + var_name);
+  that->var_id->symbol->AssignLabel(current_scope->GetFullLabel() + "::" + var_name);*/
 }
 
 void Visitor::SymbolTableBuilder::FindDefinition(Expr::Id *id) {
@@ -169,11 +172,15 @@ void Visitor::SymbolTableBuilder::Visit(ClassMethod *method) {
   initial_scope->SetLabel(method->name.c_str());
   
   auto* tree = new ScopeTree(initial_scope);
-  // trees_.emplace_back(tree);
   current_tree_ = tree;
-  
   scopes_.push(initial_scope);
+
+  for (auto& param : method->params) {
+    param.symbol = AddVarAt(initial_scope, param.name);
+  }
+  
   method->statements->Accept(this);
+  
   scopes_.pop();
 }
 
@@ -186,7 +193,9 @@ void Visitor::SymbolTableBuilder::Visit(ProgramBody *body) {
 }
 
 void Visitor::SymbolTableBuilder::Visit(Expr::This *this_expr) {
-  LOG("this expr");
+  UserType* new_type = new UserType(current_class_->name);
+  new_type->instance_of = current_class_;
+  this_expr->type = new_type;
 }
 
 void Visitor::SymbolTableBuilder::Visit(MainClass *main_class) {
@@ -199,8 +208,23 @@ void Visitor::SymbolTableBuilder::Visit(Expr::New *new_expr) {
 
 void Visitor::SymbolTableBuilder::Visit(Expr::Call *call) {
   call->expr->Accept(this);
+  
+  for (auto& expr : call->passed_params->params) {
+    expr->Accept(this);
+  }
 }
 
 void Visitor::SymbolTableBuilder::Visit(Stmt::ExprStmt *stmt_expr) {
   stmt_expr->expr->Accept(this);
+}
+
+Symbol *Visitor::SymbolTableBuilder::AddVarAt(VariableScope *scope_at, const std::string &name){
+  // Will terminate if that variable was defined previously
+  // in the same scope
+  current_tree_->DefineVariable(scope_at, name);
+  
+  Symbol* new_decl = new Symbol(scope_at, name);
+  new_decl->AssignLabel(scope_at->GetFullLabel() + "::" + name);
+  
+  return new_decl;
 }

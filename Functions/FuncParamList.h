@@ -16,5 +16,5 @@ class FuncParamList {
   
   void AddParameter(FuncParameter* parameter);
   
-  std::vector<FuncParameter> parameters;
+  std::vector<FuncParameter> params;
 };

@@ -22,7 +22,7 @@ class ClassMethod : public Decl::Base {
  public:
   Type* out;
   std::string name;
-  std::vector<FuncParameter> parameters;
+  std::vector<FuncParameter> params;
   Stmt::List* statements;
   Class* owner;
   

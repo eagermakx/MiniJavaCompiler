@@ -13,9 +13,9 @@
 
 namespace Visitor {
 
-class Executor : public Visitor::Base {
+class Interpreter : public Visitor::Base {
  public:
-  Executor() = default;
+  Interpreter() = default;
   
   int Run(Program *program);
   
@@ -52,11 +52,15 @@ class Executor : public Visitor::Base {
   void Visit(Stmt::ExprStmt* stmt_expr) override;
  
  private:
-  std::shared_ptr<Object> CallMethod(Class* cls, ClassMethod* method, std::vector<std::shared_ptr<Object>>&& params, std::shared_ptr<Object> self = nullptr);
+  std::shared_ptr<Object> CallMethod(Class* cls, ClassMethod* method, CallParamList *params, std::shared_ptr<Object> self = nullptr);
+  
+  std::vector<std::shared_ptr<Object>> EvaluateParams(CallParamList* params);
   
   std::unordered_map<std::string, int> vars_{};
   int return_value_{0};
   int temp_register_{0};
+  
+  std::shared_ptr<Object> temp_object_;
   
   CallFrame* current_frame{nullptr};
 };

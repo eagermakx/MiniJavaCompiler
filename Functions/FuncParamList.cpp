@@ -5,5 +5,5 @@
 #include "FuncParamList.h"
 
 void FuncParamList::AddParameter(FuncParameter* parameter) {
-  parameters.push_back(*parameter);
+  params.push_back(*parameter);
 }

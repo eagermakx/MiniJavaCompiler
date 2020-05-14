@@ -23,6 +23,9 @@ class CallFrame {
   void AddVariable(const std::string& name);
   
   void SetReturnValue(std::shared_ptr<Object> object);
+  bool IsStatic();
+  
+  std::shared_ptr<Object> GetThis();
  
  public:
   std::shared_ptr<Object> return_value{nullptr};

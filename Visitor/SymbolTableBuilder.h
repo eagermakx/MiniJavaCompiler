@@ -49,10 +49,14 @@ class SymbolTableBuilder : public Visitor::Base {
  private:
   void FindDefinition(Expr::Id* id);
   
+  Symbol* AddVarAt(VariableScope* scope_at, const std::string& name);
+  
  private:
   std::vector<ScopeTree*> trees_;
   ScopeTree* current_tree_{nullptr};
   std::stack<VariableScope*> scopes_;
+  
+  Class* current_class_;
   
   Table* symbol_table_;
 };
