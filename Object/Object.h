@@ -15,4 +15,7 @@ class Object {
   Type* type;
 };
 
-std::shared_ptr<Object> CreateObjectFromType(Type* type);
+std::shared_ptr<Object> CreateObjectFromType(Type *type);
+
+std::shared_ptr<Object> CreateObjectFromType(Type *type, int value);
+

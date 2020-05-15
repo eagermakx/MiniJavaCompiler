@@ -48,7 +48,9 @@ class TypeChecker : public Visitor::Base {
   
  private:
   std::unordered_map<Symbol, Type*> symbol_types;
+  
   ClassMethod* current_method{nullptr};
+  
   Table* symbol_table_;
 };
 

@@ -33,9 +33,9 @@ void Interpreter::Visit(Program *program) {
 }
 
 int Interpreter::CalcExpr(Expr::Base *expr) {
-  temp_register_ = 0;
+  temp_object_ = nullptr;
   expr->Accept(this);
-  return temp_register_;
+  return temp_object_->ToInt();
 }
 
 void Interpreter::Visit(Stmt::Assign *that) {
@@ -88,12 +88,14 @@ void Interpreter::Visit(Stmt::VarDecl *that) {
 }
 
 void Interpreter::Visit(Expr::Const *that) {
-  temp_register_ = that->value;
-  temp_object_ = std::make_shared<Integer>(that->value);
+  // temp_register_ = that->value;
+  // temp_object_ = std::make_shared<Integer>(that->value);
+  temp_object_ = CreateObjectFromType(that->type, that->value);
 }
 
 void Interpreter::Visit(Expr::Id *that) {
-  temp_register_ = Value(that->symbol)->ToInt();
+  // temp_register_ = Value(that->symbol)->ToInt();
+  temp_object_ = Value(that->symbol);
 }
 
 void Interpreter::Visit(Expr::This *this_expr) {
@@ -121,12 +123,19 @@ void Interpreter::Visit(Expr::BinaryOp *that) {
   int lhs = CalcExpr(that->left);
   int rhs = CalcExpr(that->right);
   
-  temp_register_ = that->op(lhs, rhs);
+  Type* output_type;
+  
+  if (Expr::IsBoolOperation(that->operation_type)) {
+    output_type = new Bool();
+  } else {
+    output_type = new Int();
+  }
+  temp_object_ = CreateObjectFromType(output_type, that->op(lhs, rhs));
 }
 
 void Interpreter::Visit(Expr::UnaryOp *that) {
   int res = CalcExpr(that->expr);
-  temp_register_ = that->op(res);
+  temp_object_ = CreateObjectFromType(new Int(), that->op(res));
 }
 
 void Interpreter::Visit(Stmt::ScopedList *scoped_list) {

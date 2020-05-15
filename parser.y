@@ -12,7 +12,6 @@
     class Driver;
 
     #include "ast_decl.h"
-
 }
 
 // %param { Driver &drv }
@@ -23,6 +22,7 @@
 %code {
 
      #include "ast.h"
+     #include "CopyLocation.h"
 
      #include "driver.hh"
      #include "location.hh"
@@ -63,6 +63,13 @@
     op_mul		"*"
     op_div 		"/"
     op_inv		"!"
+
+	op_ge 		">="
+    op_le 		"<="
+    op_gt 		">"
+    op_lt 		"<"
+    op_e 		"=="
+    op_ne 		"!="
 
 // Keywords
     kw_class 	"class"
@@ -127,28 +134,28 @@
 //    "class" "identifier" "{" "public" "static" "void" "main" "(" ")" "{" statements "}" "}" { $$ = new Program($11); driver.program = $$; }
 
 program:
-	main_class_decl class_decl_list { $$ = new Program($1, $2); driver.program = $$; };
+	main_class_decl class_decl_list { $$ = new Program($1, $2); driver.program = $$; @$ = @1; };
 
 main_class_decl:
-    "class" "identifier" "{" "public" "static" "void" "main" "(" ")" "{" statements "}" "}" { $$ = new MainClass($2, $11); };
+    "class" "identifier" "{" "public" "static" "void" "main" "(" ")" "{" statements "}" "}" { $$ = new MainClass($2, $11); @$ = @1; CopyLocation($$, @1); };
 
 class_decl_list:
 	%empty { $$ = new ProgramBody; }
     | class_decl_list class_decl { $1->AddClassDecl($2); $$ = $1; };
 
 class_decl:
-	"class" "identifier" "{" decl_list "}" { $$ = new Class($2, $4); };
+	"class" "identifier" "{" decl_list "}" { $$ = new Class($2, $4); @$ = @1; CopyLocation($$, @1); };
 
 decl_list:
 	%empty { $$ = new ClassBody; }
-	| decl_list class_field { $1->AddField($2); $$ = $1; }
+	| decl_list class_field { $1->AddField($2); $$ = $1;  }
 	| decl_list class_method { $1->AddMethod($2); $$ = $1; };
 
 class_field:
-    type "identifier" ";" { $$ = new ClassField($1, $2); };
+    type "identifier" ";" { $$ = new ClassField($1, $2); @$ = @1; CopyLocation($$, @1); };
 
 class_method:
-	"public" type "identifier" "(" parameter_list ")" "{" statements "}" { $$ = new ClassMethod($2, $3, $5, $8); };
+	"public" type "identifier" "(" parameter_list ")" "{" statements "}" { $$ = new ClassMethod($2, $3, $5, $8); @$ = @1; CopyLocation($$, @1); };
 
 parameter_list:
 	%empty { $$ = new FuncParamList; }
@@ -156,7 +163,7 @@ parameter_list:
 	| parameter_list "," func_parameter { $1->AddParameter($3); $$ = $1; };
 
 func_parameter:
-	type "identifier" { $$ = new FuncParameter($1, $2); };
+	type "identifier" { $$ = new FuncParameter($1, $2); @$ = @1; };
 
 statements:
     %empty { $$ = new Stmt::List(); }
@@ -167,59 +174,70 @@ statements:
 // %expect 1 (Above) <- the parser expects to receive 1 shift/reduce conflict
 
 statement:
-    "System" "." "out" "." "println" "(" expression ")" ";" { $$ = new Stmt::Print($7); }
-    | local_var_decl { $$ = $1; }
-    | var_id "=" expression ";" { $$ = new Stmt::Assign($1, $3); };
-    | "return" expression ";" { $$ = new Stmt::Ret($2); }
-    | "{" statements "}" { $$ = new Stmt::ScopedList($2); };
-    | if_else_stmt { $$ = $1; }
-    | expression ";" { $$ = new Stmt::ExprStmt($1); }
+    "System" "." "out" "." "println" "(" expression ")" ";" { $$ = new Stmt::Print($7); @$ = @1; CopyLocation($$, @1); }
+    | local_var_decl { $$ = $1; @$ = @1; CopyLocation($$, @1); }
+    | var_id "=" expression ";" { $$ = new Stmt::Assign($1, $3); @$ = @1; CopyLocation($$, @1); };
+    | "return" expression ";" { $$ = new Stmt::Ret($2); @$ = @1; CopyLocation($$, @1); }
+    | "{" statements "}" { $$ = new Stmt::ScopedList($2); @$ = @1; CopyLocation($$, @1); };
+    | if_else_stmt { $$ = $1; @$ = @1; CopyLocation($$, @1); }
+    | expression ";" { $$ = new Stmt::ExprStmt($1); @$ = @1; CopyLocation($$, @1); }
 
 if_else_stmt:
-    "if" "(" expression ")" statement { $$ = new Stmt::Cond($3, $5, nullptr); }
-    | "if" "(" expression ")" statement "else" statement { $$ = new Stmt::Cond($3, $5, $7); };
+    "if" "(" expression ")" statement { $$ = new Stmt::Cond($3, $5, nullptr); @$ = @1; }
+    | "if" "(" expression ")" statement "else" statement { $$ = new Stmt::Cond($3, $5, $7); @$ = @1; };
 
 // Set the precedence for binary ops
 %left "+" "-";
 %left "*" "/";
 %left "!";
 
+%nonassoc "<=" ">=" "<" ">" "==" "!=";
+
 expression:
-    expression "+" expression { $$ = Expr::BinaryOp::Add($1, $3); }
-    | expression "-" expression { $$ = Expr::BinaryOp::Sub($1, $3); }
-    | expression "*" expression { $$ = Expr::BinaryOp::Mul($1, $3); }
-    | expression "/" expression { $$ = Expr::BinaryOp::Div($1, $3); }
-	| "!" expression { $$ = Expr::UnaryOp::Not($2); }
-    | "number" { $$ = new Expr::Const($1); }
-    | "true" { $$ = new Expr::Const(1); }
-    | "false" { $$ = new Expr::Const(0); }
-    | uniform_expression { $$ = $1; };
+    expression "+" expression { $$ = Expr::BinaryOp::Add($1, $3); @$ = @1; }
+    | expression "-" expression { $$ = Expr::BinaryOp::Sub($1, $3); @$ = @1; }
+    | expression "*" expression { $$ = Expr::BinaryOp::Mul($1, $3); @$ = @1; }
+    | expression "/" expression { $$ = Expr::BinaryOp::Div($1, $3); @$ = @1; }
+
+    | expression "<=" expression { $$ = Expr::BinaryOp::LE($1, $3); @$ = @1; }
+    | expression ">=" expression { $$ = Expr::BinaryOp::GE($1, $3); @$ = @1; }
+    | expression "<" expression { $$ = Expr::BinaryOp::LT($1, $3); @$ = @1; }
+    | expression ">" expression { $$ = Expr::BinaryOp::GT($1, $3); @$ = @1; }
+    | expression "==" expression { $$ = Expr::BinaryOp::E($1, $3); @$ = @1; }
+    | expression "!=" expression { $$ = Expr::BinaryOp::NE($1, $3); @$ = @1; }
+
+	| "!" expression { $$ = Expr::UnaryOp::Not($2); @$ = @1; }
+    | "number" { $$ = new Expr::Const($1); $$->type = new Int(); @$ = @1; }
+    | "true" { $$ = new Expr::Const(1); $$->type = new Bool(); @$ = @1; }
+    | "false" { $$ = new Expr::Const(0); $$->type = new Bool(); @$ = @1; }
+    | uniform_expression { $$ = $1; @$ = @1; };
 
 uniform_expression:
-    "(" expression ")" { $$ = $2; }
-    | var_id { $$ = $1; }
-    | "this" { $$ = new Expr::This(); }
-    | "new" "identifier" "(" ")" { $$ = new Expr::New($2); }
-    | uniform_expression "." "identifier" "(" call_param_list ")" { $$ = new Expr::Call($1, $3, $5); };
+    "(" expression ")" { $$ = $2; @$ = @1; }
+    | var_id { $$ = $1; @$ = @1; CopyLocation($$, @1); }
+    | "this" { $$ = new Expr::This(); @$ = @1; CopyLocation($$, @1); }
+    | "new" "identifier" "(" ")" { $$ = new Expr::New($2); @$ = @1; CopyLocation($$, @1); }
+    | uniform_expression "." "identifier" "(" call_param_list ")" { $$ = new Expr::Call($1, $3, $5); @$ = @1; CopyLocation($$, @1); };
 
 call_param_list:
 	%empty { $$ = new CallParamList(); }
-	| call_param_list expression { $1->AddParameter($2); $$ = $1; }
+	| expression { $$ = new CallParamList(); $$->AddParameter($1); }
+	| call_param_list "," expression { $1->AddParameter($3); $$ = $1; }
 
 /*method_invocation:
 	expression "." "identifier" "(" ")" {};*/
 
 type:
-    "int" { $$ = new Int(); }
-    | "boolean" { $$ = new Bool(); }
-    | "identifier" { $$ = new UserType($1); }
-    | "void" { $$ = new Void(); }
+    "int" { $$ = new Int(); @$ = @1; }
+    | "boolean" { $$ = new Bool(); @$ = @1; }
+    | "identifier" { $$ = new UserType($1); @$ = @1; }
+    | "void" { $$ = new Void(); @$ = @1; }
 
 local_var_decl:
-    type var_id ";" { $$ = new Stmt::VarDecl($1, $2); };
+    type var_id ";" { $$ = new Stmt::VarDecl($1, $2); @$ = @1; };
 
 var_id:
-    "identifier" { $$ = new Expr::Id($1); };
+    "identifier" { $$ = new Expr::Id($1); @$ = @1; };
 
 /*literal:
     "number" { $$ = new Entity::Const($1); }

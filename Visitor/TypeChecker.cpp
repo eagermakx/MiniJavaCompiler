@@ -65,11 +65,15 @@ void Visitor::TypeChecker::Visit(Expr::BinaryOp *binary_op) {
     std::cerr << "No matching operator for operands " << Repr(binary_op->left->type) << " and " << Repr(binary_op->right->type) << std::endl;
   }
   
-  binary_op->type = new Int();
+  if (Expr::IsBoolOperation(binary_op->operation_type)) {
+    binary_op->type = new Bool();
+  } else {
+    binary_op->type = new Int();
+  }
 }
 
 void Visitor::TypeChecker::Visit(Expr::Const *const_expr) {
-  const_expr->type = new Int();
+  // const_expr->type = new Int();
 }
 
 void Visitor::TypeChecker::Visit(Expr::Id *id) {
@@ -77,7 +81,10 @@ void Visitor::TypeChecker::Visit(Expr::Id *id) {
 }
 
 void Visitor::TypeChecker::Visit(Expr::This *this_expr) {
-
+  auto type = new UserType(current_method->owner->name);
+  type->instance_of = current_method->owner;
+  
+  this_expr->type = type;
 }
 
 void Visitor::TypeChecker::Visit(Expr::UnaryOp *unary_op) {
@@ -97,6 +104,14 @@ void Visitor::TypeChecker::Visit(Stmt::Assign *assn) {
 
 void Visitor::TypeChecker::Visit(Stmt::Cond *cond) {
   cond->condition->Accept(this);
+  
+  if (cond->stmt_true) {
+    cond->stmt_true->Accept(this);
+  }
+  
+  if (cond->stmt_false) {
+    cond->stmt_false->Accept(this);
+  }
   
   if (!IsBool(cond->condition->type)) {
     std::cerr << "Incompatible types: " << Repr(cond->condition->type) << " at 'if' condition" << std::endl;

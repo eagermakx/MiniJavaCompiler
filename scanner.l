@@ -67,6 +67,14 @@ blank [ \t\r]
 "*"        return yy::parser::make_op_mul       (loc);
 "/"        return yy::parser::make_op_div       (loc);
 "="        return yy::parser::make_op_assign    (loc);
+
+">="       return yy::parser::make_op_ge        (loc);
+"<="       return yy::parser::make_op_le        (loc);
+">"        return yy::parser::make_op_gt        (loc);
+"<"        return yy::parser::make_op_lt        (loc);
+"=="       return yy::parser::make_op_e         (loc);
+"!="       return yy::parser::make_op_ne        (loc);
+
 "!"        return yy::parser::make_op_inv       (loc);
 
 "("        return yy::parser::make_LPAREN       (loc);
@@ -77,6 +85,7 @@ blank [ \t\r]
 "]"        return yy::parser::make_RBRACKET     (loc);
 
 "int"      return yy::parser::make_t_int        (loc);
+"boolean"  return yy::parser::make_t_boolean    (loc);
 
 ";"        return yy::parser::make_SEMICOLON    (loc);
 ","        return yy::parser::make_COMMA        (loc);

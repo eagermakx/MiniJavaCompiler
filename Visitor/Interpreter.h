@@ -11,6 +11,8 @@
 #include <unordered_map>
 #include <Functions/CallFrame.h>
 
+#include <CompilationErrors.h>
+
 namespace Visitor {
 
 class Interpreter : public Visitor::Base {
@@ -58,7 +60,7 @@ class Interpreter : public Visitor::Base {
   
   std::unordered_map<std::string, int> vars_{};
   int return_value_{0};
-  int temp_register_{0};
+  // int temp_register_{0};
   
   std::shared_ptr<Object> temp_object_;
   

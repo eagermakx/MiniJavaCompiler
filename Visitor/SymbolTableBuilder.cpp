@@ -34,19 +34,6 @@ void Visitor::SymbolTableBuilder::Visit(Program *program) {
   }
   
   program->main_class->Accept(this);
-  
-  /*auto* global = new VariableScope(nullptr);
-  global->SetLabel("main");
-  auto* main = new ScopeTree(global);
-  trees_.emplace_back(main);
-  current_tree_ = main;
-  
-  scopes_.push(global);
-  
-  auto* main_method = program->main_class->GetMainFunction();
-  main_method->statements->Accept(this);
-  
-  scopes_.pop();*/
 }
 
 void Visitor::SymbolTableBuilder::Visit(Stmt::ScopedList *scoped_list) {
@@ -90,22 +77,6 @@ void Visitor::SymbolTableBuilder::Visit(Expr::BinaryOp *that) {
   that->right->Accept(this);
 }
 
-/*void Visitor::SymbolTableBuilder::Visit(Expr::lvalue *that) {
-  FindDefinition(that->id);
-}
-
-void Visitor::SymbolTableBuilder::Visit(Expr::rvalue *that) {
-  switch (that->type) {
-    case Expr::rvalue::Type::ident:
-      FindDefinition(that->id);
-      break;
-    case Expr::rvalue::Type::constant:
-      // Do nothing
-      break;
-    default: UNREACHABLE("");
-  }
-}*/
-
 void Visitor::SymbolTableBuilder::Visit(Expr::UnaryOp *that) {
   that->expr->Accept(this);
 }
@@ -135,16 +106,6 @@ void Visitor::SymbolTableBuilder::Visit(Stmt::Ret *that) {
 
 void Visitor::SymbolTableBuilder::Visit(Stmt::VarDecl *that) {
   that->var_id->symbol = AddVarAt(scopes_.top(), that->var_id->identifier);
-  
-  /*VariableScope* current_scope = scopes_.top();
-  std::string var_name = that->var_id->identifier;
-  
-  // Will terminate if that variable was defined previously
-  // in the same scope
-  current_tree_->DefineVariable(current_scope, var_name);
-  
-  that->var_id->symbol = new Symbol(current_scope, var_name);
-  that->var_id->symbol->AssignLabel(current_scope->GetFullLabel() + "::" + var_name);*/
 }
 
 void Visitor::SymbolTableBuilder::FindDefinition(Expr::Id *id) {

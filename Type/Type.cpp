@@ -18,6 +18,10 @@ std::string Repr(Type* type) {
 
 bool SameType(Type* lhs, Type* rhs) {
   assert(lhs && rhs);
+  
+  UserType* lhs_user = (UserType*)lhs;
+  UserType* rhs_user = (UserType*)rhs;
+  
   bool ans;
   if (lhs->type == rhs->type) {
     if (lhs->type == Type::PossibleTypes::UserType) {

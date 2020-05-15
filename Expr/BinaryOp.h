@@ -14,7 +14,13 @@ namespace Expr {
     Add,
     Sub,
     Mul,
-    Div
+    Div,
+    GT,
+    LT,
+    LE,
+    GE,
+    E,
+    NE
   };
   
   ExprBinOp BinOpByType(BinOperationType type);
@@ -30,6 +36,12 @@ namespace Expr {
     static BinaryOp* Sub(Expr::Base* left, Expr::Base* right);
     static BinaryOp* Mul(Expr::Base* left, Expr::Base* right);
     static BinaryOp* Div(Expr::Base* left, Expr::Base* right);
+    static BinaryOp* GT(Expr::Base* left, Expr::Base* right);
+    static BinaryOp* LT(Expr::Base* left, Expr::Base* right);
+    static BinaryOp* GE(Expr::Base* left, Expr::Base* right);
+    static BinaryOp* LE(Expr::Base* left, Expr::Base* right);
+    static BinaryOp* E(Expr::Base* left, Expr::Base* right);
+    static BinaryOp* NE(Expr::Base* left, Expr::Base* right);
  
     void Accept(Visitor::Base* visitor) override;
  
@@ -41,5 +53,6 @@ namespace Expr {
     ExprBinOp op;
   };
   
+  bool IsBoolOperation(BinOperationType type);
 }
 
