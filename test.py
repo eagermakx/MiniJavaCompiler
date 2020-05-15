@@ -3,7 +3,12 @@
 import os
 import sys
 
-tests = ['2+2', '2+2_var', 'if_else', 'interactive', 'println', 'scopes', 'local_scope', 'shadowed_modified', 'undecl_var']
+tests = ['2+2', '2+2_var', 'call_on_temp', 'compare', 'fac', \
+ 		 'if_else', 'interactive', 'modified', 'print_n_numbers', \
+ 		 'println', 'scopes', 'shadowed_modified', \
+ 		 'simple_call', 'two_classes_simple', 'two_classes']
+
+failing_tests = ['undecl_var', 'local_scope']
 
 def java_file(test):
 	return test_id + '.java'
@@ -47,7 +52,14 @@ def run_single_test(test, ast):
 		print(stream.read())
 
 def main(png_dir, ast=False):
+	print("\n### Positive tests: ###\n")
+
 	for test in tests:
+		run_single_test(test, ast)
+
+	print("\n### Failing tests ###\n")
+
+	for test in failing_tests:
 		run_single_test(test, ast)
 
 	if ast:

@@ -39,15 +39,9 @@ int Interpreter::CalcExpr(Expr::Base *expr) {
 }
 
 void Interpreter::Visit(Stmt::Assign *that) {
-  std::string& id = that->lhs->identifier;
+  that->rhs->Accept(this);
   
-  // Calc expression, store it into the variable
-  int result = CalcExpr(that->rhs);
-  
-  // .at() function throws `out_of_range` exception
-  // when passed a non-existing key, just how we want it
-  
-  Assign(that->lhs->symbol, std::make_shared<Integer>(result));
+  Assign(that->lhs->symbol, temp_object_);
 }
 
 void Interpreter::Visit(Stmt::Cond *that) {
