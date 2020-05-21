@@ -5,7 +5,13 @@
 #include "VarDecl.h"
 
 namespace Stmt {
-  void VarDecl::Accept(Visitor::Base *visitor) {
-    visitor->Visit(this);
-  }
+
+void VarDecl::Accept(Visitor::Base *visitor) {
+  visitor->Visit(this);
+}
+
+VarDecl::VarDecl(Type *type, Expr::Id *var_id) : var_id(var_id) {
+  var_id->type = type;
+}
+
 }

@@ -6,7 +6,7 @@
 
 #include "Visitor.h"
 #include "ast_decl.h"
-#include "SymbolTable/Scope.h"
+#include "SymbolTable/VariableScope.h"
 #include "SymbolTable/ScopeTree.h"
 #include "SymbolTable/Table.h"
 
@@ -17,32 +17,48 @@ namespace Visitor {
 
 class SymbolTableBuilder : public Visitor::Base {
  public:
-  SymbolTableBuilder() = default;
+  explicit SymbolTableBuilder(Table* symbol_table);
   
   void Process(Program* program);
   
-  void Visit(Program *program) override;
-  void Visit(Entity::Const *that) override;
-  void Visit(Entity::Id *that) override;
-  void Visit(Expr::BinaryOp *that) override;
-  void Visit(Expr::lvalue *that) override;
-  void Visit(Expr::rvalue *that) override;
-  void Visit(Expr::UnaryOp *that) override;
-  void Visit(Stmt::Assign *that) override;
-  void Visit(Stmt::Cond *that) override;
-  void Visit(Stmt::Print *that) override;
-  void Visit(Stmt::Ret *that) override;
-  void Visit(Stmt::List *that) override;
-  void Visit(Stmt::VarDecl *that) override;
+  void Visit(Program* program) override;
+  
+  void Visit(Class* cls) override;
+  void Visit(ClassMethod* method) override;
+  void Visit(ClassField* field) override;
+  void Visit(ProgramBody* body) override;
+  void Visit(MainClass* main_class) override;
+  
+  void Visit(Expr::BinaryOp* binary_op) override;
+  void Visit(Expr::Const* const_expr) override;
+  void Visit(Expr::Id* rvalue) override;
+  void Visit(Expr::This* this_expr) override;
+  void Visit(Expr::UnaryOp* unary_op) override;
+  void Visit(Expr::Call* call) override;
+  void Visit(Expr::New* new_expr) override;
+  
+  void Visit(Stmt::Assign* assn) override;
+  void Visit(Stmt::Cond* cond) override;
+  void Visit(Stmt::Print* print) override;
+  void Visit(Stmt::Ret* ret) override;
+  void Visit(Stmt::List* list) override;
+  void Visit(Stmt::VarDecl* var_decl) override;
   void Visit(Stmt::ScopedList* scoped_list) override;
+  void Visit(Stmt::ExprStmt* stmt_expr) override;
  
  private:
-  void FindDefinition(Entity::Id* id);
+  void FindDefinition(Expr::Id* id);
+  
+  Symbol* AddVarAt(VariableScope* scope_at, const std::string& name);
   
  private:
   std::vector<ScopeTree*> trees_;
   ScopeTree* current_tree_{nullptr};
-  std::stack<Scope*> scopes_;
+  std::stack<VariableScope*> scopes_;
+  
+  Class* current_class_;
+  
+  Table* symbol_table_;
 };
 
 } // namespace Visitor

@@ -14,7 +14,13 @@ namespace Expr {
     Add,
     Sub,
     Mul,
-    Div
+    Div,
+    GT,
+    LT,
+    LE,
+    GE,
+    E,
+    NE
   };
   
   ExprBinOp BinOpByType(BinOperationType type);
@@ -22,7 +28,7 @@ namespace Expr {
   class BinaryOp : public Expr::Base {
    public:
     BinaryOp(BinOperationType type, Expr::Base* left, Expr::Base* right)
-      : op(BinOpByType(type)), type(type), left(left), right(right) {}
+      : op(BinOpByType(type)), operation_type(type), left(left), right(right) {}
       
     ~BinaryOp() override = default;
     
@@ -30,18 +36,23 @@ namespace Expr {
     static BinaryOp* Sub(Expr::Base* left, Expr::Base* right);
     static BinaryOp* Mul(Expr::Base* left, Expr::Base* right);
     static BinaryOp* Div(Expr::Base* left, Expr::Base* right);
+    static BinaryOp* GT(Expr::Base* left, Expr::Base* right);
+    static BinaryOp* LT(Expr::Base* left, Expr::Base* right);
+    static BinaryOp* GE(Expr::Base* left, Expr::Base* right);
+    static BinaryOp* LE(Expr::Base* left, Expr::Base* right);
+    static BinaryOp* E(Expr::Base* left, Expr::Base* right);
+    static BinaryOp* NE(Expr::Base* left, Expr::Base* right);
  
     void Accept(Visitor::Base* visitor) override;
-
-    int eval() const override;
  
    public:
     Expr::Base* left;
     Expr::Base* right;
     
-    BinOperationType type;
+    BinOperationType operation_type;
     ExprBinOp op;
   };
   
+  bool IsBoolOperation(BinOperationType type);
 }
 

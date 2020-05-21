@@ -5,6 +5,10 @@
 #include "ast.h"
 #include "PrintAST.h"
 
+#include <iostream>
+#include <Decl/MainClass.h>
+#include <Type/Type.h>
+
 Visitor::PrintAST::PrintAST(const std::string &filename) {
   stream_.open(filename, std::ios_base::out);
   GraphPrologue();
@@ -48,23 +52,30 @@ void Visitor::PrintAST::Visit(Program *program) {
   PrintNode(node, "Program");
   
   PushNode(node);
-  program->list->Accept(this);
+  
+  program->main_class->Accept(this);
+  
+  for (auto& class_ : program->classes) {
+    class_->Accept(this);
+  }
+  
   PopNode();
 }
 
 
-void Visitor::PrintAST::Visit(Entity::Const *that) {
+void Visitor::PrintAST::Visit(Expr::Const *that) {
   CreateNodeAndLink(std::to_string(that->value));
 }
 
-void Visitor::PrintAST::Visit(Entity::Id *that) {
+void Visitor::PrintAST::Visit(Expr::Id *that) {
   std::string label;
   
   if (that->symbol) {
     label = that->symbol->GetName();
   } else {
-    label = "[!] " + that->identifier;
+    label = "(undefined_symbol)" + that->identifier;
   }
+  // std::cout << " :::: " << label << std::endl;
   
   CreateNodeAndLink(label);
 }
@@ -92,7 +103,7 @@ std::string Repr(Expr::UnOperationType type) {
 }
 
 void Visitor::PrintAST::Visit(Expr::BinaryOp *that) {
-  int node = CreateNodeAndLink(Repr(that->type));
+  int node = CreateNodeAndLink(Repr(that->operation_type));
   
   PushNode(node);
   that->left->Accept(this);
@@ -100,7 +111,7 @@ void Visitor::PrintAST::Visit(Expr::BinaryOp *that) {
   PopNode();
 }
 
-void Visitor::PrintAST::Visit(Expr::lvalue *that) {
+/*void Visitor::PrintAST::Visit(Expr::lvalue *that) {
   int node = CreateNodeAndLink("lvalue");
   
   PushNode(node);
@@ -119,10 +130,10 @@ void Visitor::PrintAST::Visit(Expr::rvalue *that) {
     that->literal->Accept(this);
   }
   PopNode();
-}
+}*/
 
 void Visitor::PrintAST::Visit(Expr::UnaryOp *that) {
-  int node = CreateNodeAndLink(Repr(that->type));
+  int node = CreateNodeAndLink(Repr(that->operation_type));
   
   PushNode(node);
   that->expr->Accept(this);
@@ -133,8 +144,14 @@ void Visitor::PrintAST::Visit(Stmt::Assign *that) {
   int node = CreateNodeAndLink("=");
   
   PushNode(node);
-  that->lvalue->Accept(this);
-  that->expr->Accept(this);
+  /*that->lvalue->Accept(this);
+  that->expr->Accept(this);*/
+  
+  // std::cout << "...." << that->lhs->symbol.GetName() << std::endl;
+  
+  that->lhs->Accept(this);
+  that->rhs->Accept(this);
+  
   PopNode();
 }
 
@@ -179,7 +196,7 @@ void Visitor::PrintAST::Visit(Stmt::List *that) {
 void Visitor::PrintAST::Visit(Stmt::VarDecl *that) {
   int node = CreateNodeAndLink("VarDecl");
   PushNode(node);
-  that->ident->Accept(this);
+  that->var_id->Accept(this);
   PopNode();
 }
 
@@ -208,6 +225,60 @@ void Visitor::PrintAST::Visit(Stmt::ScopedList *scoped_list) {
   PushNode(node);
   scoped_list->list->Accept(this);
   PopNode();
+}
+
+void Visitor::PrintAST::Visit(Class *class_decl) {
+  int node = CreateNodeAndLink("Class: " + class_decl->name);
+  PushNode(node);
+  for (auto& method : class_decl->methods) {
+    method->Accept(this);
+  }
+  for (auto& field : class_decl->fields) {
+    field->Accept(this);
+  }
+  PopNode();
+}
+
+void Visitor::PrintAST::Visit(ClassMethod *method) {
+  int node = CreateNodeAndLink(method->Representation());
+  PushNode(node);
+  method->statements->Accept(this);
+  PopNode();
+}
+
+void Visitor::PrintAST::Visit(ClassField *field) {
+  CreateNodeAndLink(Repr(field->type) + " " + field->name);
+}
+
+void Visitor::PrintAST::Visit(ProgramBody *body) {
+
+}
+
+void Visitor::PrintAST::Visit(Expr::This *this_expr) {
+  CreateNodeAndLink("this");
+}
+
+void Visitor::PrintAST::Visit(MainClass *main_class) {
+  int node = CreateNodeAndLink("MainClass: " + main_class->name);
+  PushNode(node);
+  main_class->GetMainFunction()->Accept(this);
+  PopNode();
+}
+
+void Visitor::PrintAST::Visit(Expr::New *new_expr) {
+  int node = CreateNodeAndLink("new " + new_expr->class_name);
+}
+
+void Visitor::PrintAST::Visit(Expr::Call *call) {
+  int node = CreateNodeAndLink("Call");
+  PushNode(node);
+  call->expr->Accept(this);
+  int function_name = CreateNodeAndLink(call->method_name + "()");
+  PopNode();
+}
+
+void Visitor::PrintAST::Visit(Stmt::ExprStmt *stmt_expr) {
+  stmt_expr->expr->Accept(this);
 }
 
 

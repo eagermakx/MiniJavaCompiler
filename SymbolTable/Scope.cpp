@@ -1,70 +1,47 @@
 //
-// Created by Igor Maximov on 03.05.2020.
+// Created by Igor Maximov on 10.05.2020.
 //
 
 #include "Scope.h"
-#include "error.h"
-#include "Object/UninitObject.h"
 
 ScopeId GenerateId() {
   static ScopeId current_id = 0;
   return current_id++;
 }
 
-Scope::Scope(Scope *parent) : parent_(parent), id_(GenerateId()) {
+Scope::Scope(Scope *parent) : id_(GenerateId()), parent_(parent) {
+  GenerateFullLabel();
 }
 
-bool Scope::Exists(const std::string& variable) const {
-  return variable_value_.find(variable) != variable_value_.end();
+Scope::Scope() : id_(GenerateId()) {
+  GenerateFullLabel();
 }
 
-void Scope::Set(const std::string& variable, std::shared_ptr<Object> object) {
-  if (!Exists(variable)) {
-    ERROR("Assignment to undefined variable", "Scope::Set");
-  }
-  
-  variable_value_[variable] = std::move(object);
+std::string Scope::GetName() const {
+  return name_;
 }
 
-std::shared_ptr<Object> Scope::Get(const std::string &variable) const {
-  if (!Exists(variable)) {
-    ERROR("Access to undefined variable", "Scope::Get");
-  }
-  
-  return variable_value_.at(variable);
-}
-
-void Scope::DefineVariable(const std::string &variable) {
-  if (Exists(variable)) {
-    ERROR("Redefenition of existing variable", "Scope::Declare");
-  }
-  
-  variable_value_.insert({variable, std::make_shared<UninitObject>()});
-  variables_.push_back(variable);
-}
-
-void Scope::AddChild(Scope *child) {
-  children_.push_back(child);
-}
-
-Scope *Scope::GetChild(size_t index) const {
-  return children_[index];
-}
-
-Scope *Scope::GetParent() const {
-  return parent_;
-}
-
-const char* Scope::Label() const {
-  return layer_label_.c_str();
-}
-
-void Scope::SetLabel(const char* new_label) {
-  layer_label_ = new_label;
+void Scope::SetLabel(const char *new_label) {
+  name_ = new_label;
+  GenerateFullLabel();
 }
 
 ScopeId Scope::GetId() const {
   return id_;
 }
 
+std::string Scope::GetFullLabel() const {
+  return full_path_;
+}
+
+void Scope::GenerateFullLabel() {
+  std::string prefix = parent_ ? parent_->GetFullLabel() : "";
+  if (!prefix.empty()) {
+    prefix += "::";
+  }
+  
+  std::string suffix = name_.empty() ? std::to_string(id_) : name_;
+  
+  full_path_ = prefix + suffix;
+}
 

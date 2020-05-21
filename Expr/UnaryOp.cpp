@@ -4,10 +4,6 @@
 
 #include "UnaryOp.h"
 
-int Expr::UnaryOp::eval() const {
-  return op(expr->eval());
-}
-
 void Expr::UnaryOp::Accept(Visitor::Base *visitor) {
   visitor->Visit(this);
 }

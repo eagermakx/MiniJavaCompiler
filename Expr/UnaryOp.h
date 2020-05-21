@@ -19,17 +19,15 @@ namespace Expr {
   
   class UnaryOp : public Expr::Base {
    public:
-    UnaryOp(UnOperationType type, Expr::Base* expr) : op(UnOpByType(type)), type(type), expr(expr) {}
+    UnaryOp(UnOperationType type, Expr::Base* expr) : op(UnOpByType(type)), operation_type(type), expr(expr) {}
     
     static UnaryOp* Not(Expr::Base* expr);
     static UnaryOp* Minus(Expr::Base* expr);
   
-    int eval() const override;
-  
     void Accept(Visitor::Base *visitor) override;
  
    public:
-    UnOperationType type;
+    UnOperationType operation_type;
     UnOp op;
     Expr::Base* expr;
   };

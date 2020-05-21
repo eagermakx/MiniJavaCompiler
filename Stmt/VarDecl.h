@@ -4,17 +4,19 @@
 
 #pragma once
 
-#include "Entity/Id.h"
+#include "Expr/Id.h"
 #include "Stmt.h"
+#include "Type/Type.h"
 
 namespace Stmt {
   class VarDecl : public Stmt::Base {
    public:
-    explicit VarDecl(Entity::Id *ident) : ident(ident) {}
+    explicit VarDecl(Type* type, Expr::Id* var_id);
     
     void Accept(Visitor::Base *visitor) override;
    
    public:
-    Entity::Id *ident;
+    // Type* type;
+    Expr::Id* var_id;
   };
 }

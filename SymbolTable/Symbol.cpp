@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-Symbol::Symbol(Scope* scope, std::string name) : parent_scope_(scope) {
-  label_ = std::to_string(parent_scope_->GetId()) + "_" + scope->Label() + "::" + name;
+Symbol::Symbol(VariableScope* scope, std::string name) : parent_scope_(scope) {
+  label_ = std::to_string(scope->GetId()) + "_" + scope->GetName() + "::" + name;
 }
 
 // Symbol::Symbol(const Symbol& symbol): name_(symbol.name_) {}
@@ -17,5 +17,22 @@ bool Symbol::operator!=(const Symbol& other) const {
 }
 
 const char* Symbol::GetName() const {
+  return label_.c_str();
+}
+
+void Symbol::Reset(VariableScope *scope, std::string name) {
+  parent_scope_ = scope;
+  label_ = std::to_string(scope->GetId()) + "_" + scope->GetName() + "::" + name;
+}
+
+VariableScope *Symbol::GetParentScope() const {
+  return parent_scope_;
+}
+
+void Symbol::AssignLabel(std::string new_label) {
+  label_ = std::move(new_label);
+}
+
+const char* Symbol::GetLabel() {
   return label_.c_str();
 }

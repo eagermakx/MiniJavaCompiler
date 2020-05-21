@@ -3,7 +3,8 @@
 //
 
 #pragma once
-#include "Visitor/Visitor.h"
+#include <Visitor/Visitor.h>
+#include <location.hh>
 
 class BaseNode {
  public:
@@ -11,5 +12,5 @@ class BaseNode {
   virtual ~BaseNode() = default;
  
  public:
-  int line_no{0};
+  yy::location loc;
 };

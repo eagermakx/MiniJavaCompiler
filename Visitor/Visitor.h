@@ -10,12 +10,22 @@ namespace Visitor {
   class Base {
    public:
     virtual void Visit(Program* program) = 0;
-    virtual void Visit(Entity::Const* constant) = 0;
-    virtual void Visit(Entity::Id* ident) = 0;
+    
+    virtual void Visit(Class* class_decl) = 0;
+    virtual void Visit(ClassMethod* method) = 0;
+    virtual void Visit(ClassField* field) = 0;
+    virtual void Visit(ProgramBody* body) = 0;
+    virtual void Visit(MainClass* main_class) = 0;
+    
     virtual void Visit(Expr::BinaryOp* binary_op) = 0;
-    virtual void Visit(Expr::lvalue* lvalue) = 0;
-    virtual void Visit(Expr::rvalue* rvalue) = 0;
+    virtual void Visit(Expr::Const* const_expr) = 0;
+    virtual void Visit(Expr::Id* rvalue) = 0;
+    virtual void Visit(Expr::This* this_expr) = 0;
     virtual void Visit(Expr::UnaryOp* unary_op) = 0;
+    virtual void Visit(Expr::Call* call) = 0;
+    virtual void Visit(Expr::New* new_expr) = 0;
+    
+    virtual void Visit(Stmt::ExprStmt* stmt_expr) = 0;
     virtual void Visit(Stmt::Assign* assn) = 0;
     virtual void Visit(Stmt::Cond* cond) = 0;
     virtual void Visit(Stmt::Print* print) = 0;

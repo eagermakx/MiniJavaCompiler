@@ -4,12 +4,18 @@
 
 #pragma once
 
-#include "Stmt/List.h"
+#include "ast_decl.h"
+#include <vector>
+
+class Class;
+class ProgramBody;
+class MainClass;
 
 class Program {
  public:
-  explicit Program(Stmt::List* list) : list(list) {}
+  explicit Program(MainClass* main, ProgramBody* class_decls);
   
  public:
-  Stmt::List* list;
+  std::vector<Class*> classes;
+  MainClass* main_class;
 };

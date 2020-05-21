@@ -4,12 +4,13 @@
 
 #pragma once
 
-#include "Entity.h"
-#include <string>
+#include "Expr.h"
 #include "SymbolTable/Symbol.h"
 
-namespace Entity {
-  class Id : public Base {
+#include <string>
+
+namespace Expr {
+class Id : public Expr::Base {
    public:
     explicit Id(std::string identifier);
     
@@ -17,6 +18,6 @@ namespace Entity {
    
    public:
     std::string identifier;
-    Symbol* symbol{nullptr};
+    Symbol* symbol;
   };
 }

@@ -3,10 +3,12 @@
 //
 
 #pragma once
-#include "Object.h"
+#include "ClassObject.h"
 
 class UninitObject : public Object {
  public:
+  UninitObject() : Object(nullptr) {}
+  
   int ToInt() override;
 };
 

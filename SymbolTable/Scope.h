@@ -1,12 +1,12 @@
 //
-// Created by Igor Maximov on 03.05.2020.
+// Created by Igor Maximov on 10.05.2020.
 //
 
 #pragma once
-#include "Object/Object.h"
 
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 #include <string>
 
 class ScopeTree;
@@ -16,33 +16,19 @@ using ScopeId = size_t;
 class Scope {
  public:
   explicit Scope(Scope* parent);
-  Scope() = default;
- 
-  bool Exists(const std::string&) const;
-  void Set(const std::string&, std::shared_ptr<Object>);
-  std::shared_ptr<Object> Get(const std::string&) const;
+  Scope();
   
-  void DefineVariable(const std::string &variable);
+  std::string GetName() const;
+  std::string GetFullLabel() const;
   
-  void AddChild(Scope*);
-  Scope* GetChild(size_t) const;
-  Scope* GetParent() const;
-  
-  const char* Label() const;
   void SetLabel(const char* new_label);
+  void GenerateFullLabel();
   
   ScopeId GetId() const;
- 
- public:
-  std::vector<std::string> variables_;
-  
  private:
   ScopeId id_;
-  
   Scope* parent_{nullptr};
-  std::vector<Scope*> children_;
   
-  std::unordered_map<std::string, std::shared_ptr<Object>> variable_value_;
-  std::unordered_map<std::string, size_t> offset_;
-  std::string layer_label_;
+  std::string name_;
+  std::string full_path_;
 };
