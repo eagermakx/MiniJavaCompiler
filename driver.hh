@@ -24,6 +24,7 @@ class Driver {
     
     Program* program;
     void PrintAST(const std::string& filename);
+    void PrintIR(const std::string& filename);
     int Run();
 
     friend class Scanner;
