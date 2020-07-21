@@ -6,6 +6,9 @@
 #include <Visitor/TypeChecker.h>
 #include <log.h>
 
+#include <IR/Visitors/PrintIR.h>
+#include <Visitor/IRTranslator.h>
+
 Driver::Driver() :
     trace_parsing(false),
     trace_scanning(false),
@@ -58,5 +61,13 @@ void Driver::PrintAST(const std::string& filename) {
 int Driver::Run() {
   Visitor::Interpreter interpreter;
   return interpreter.Run(program);
+}
+
+void Driver::PrintIR(const std::string &filename) {
+  Visitor::IRTranslator translator;
+  translator.Run(program);
+  
+  IR::Visitor::PrintIR printer(filename);
+  printer.Run(translator.GetMapping());
 }
 
