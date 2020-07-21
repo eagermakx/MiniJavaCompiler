@@ -8,7 +8,7 @@ tests = ['2+2', '2+2_var', 'call_on_temp', 'compare', 'fac', \
  		 'println', 'scopes', 'shadowed_modified', \
  		 'simple_call', 'two_classes_simple', 'two_classes']
 
-ir_tests = ['if(a)', 'if_test']
+ir_tests = ['if_a', 'if_test']
 
 failing_tests = ['undecl_var', 'local_scope']
 
@@ -68,6 +68,10 @@ def main(png_dir, ast=False, ir=False):
 	for test in tests:
 		run_single_test(test, ast, ir)
 
+	if ir:
+		for test in ir_tests:
+			run_single_test(test, ast, ir)
+
 	print("\n### Failing tests ###\n")
 
 	for test in failing_tests:
@@ -76,6 +80,10 @@ def main(png_dir, ast=False, ir=False):
 	if ast or ir:
 		for test in tests:
 			render_images(test, png_dir)
+
+		if ir:
+			for test in ir_tests:
+				render_images(test, png_dir)
 
 def usage():
 	print ("\tUsage: test.py [ast/ir]\n")
