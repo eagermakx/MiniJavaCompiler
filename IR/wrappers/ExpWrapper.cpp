@@ -15,7 +15,7 @@ BaseStm *IR::ExpWrapper::ToStm() {
 }
 
 BaseStm* IR::ExpWrapper::ToCond(Label true_label, Label false_label) {
-  return new IR::CJump(LogicOpType::E, exp_, new IR::Const(0), false_label, true_label);
+  return new IR::CJump(LogicOpType::NE, exp_, new IR::Const(0), true_label, false_label);
 }
 
 ExpWrapper::ExpWrapper(BaseExp *exp) : exp_(exp) {

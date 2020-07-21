@@ -127,11 +127,19 @@ void Visitor::IRTranslator::Visit(Expr::UnaryOp *unary_op) {
 void Visitor::IRTranslator::Visit(Expr::Call *call) {
   auto ir_params = new IR::ExpList();
   
+  auto target = Translate(call->expr);
+  
+  IR::Temp left;
+  auto temp_expr = new IR::TempExp(left);
+  
+  ir_params->Add(temp_expr);
+  
   for (auto& ast_expr : call->passed_params->params) {
     ir_params->Add(Translate(ast_expr)->ToExp());
   }
   
-  temp_value_ = new IR::ExpWrapper(new IR::Call(IR::Label(call->actual->symbol.GetLabel()), ir_params));
+  
+  temp_value_ = new IR::ExpWrapper(new IR::Eseq(new IR::Move(temp_expr, target->ToExp()) ,new IR::Call(IR::Label(call->actual->name), ir_params)));
 }
 
 void Visitor::IRTranslator::Visit(Expr::New *new_expr) {
@@ -160,6 +168,7 @@ void Visitor::IRTranslator::Visit(Stmt::Cond *cond) {
   auto false_branch = Translate(cond->stmt_false);
   current_frame_->ExitScope();
   
+  // Building whole sequence bottom-up
   IR::BaseStm* suffix = new IR::SetLabel(ljoin);
   
   if (cond->stmt_false) {
@@ -173,6 +182,13 @@ void Visitor::IRTranslator::Visit(Stmt::Cond *cond) {
   if (cond->stmt_true) {
     suffix = new IR::Seq(new IR::SetLabel(ltrue), new IR::Seq(true_branch->ToStm(), suffix));
   }
+  
+  // With no 'else' branch, fall through
+  if (!cond->stmt_false) {
+    lfalse = ljoin;
+  }
+  
+  auto tmp = condition->ToCond(ltrue, lfalse);
   
   temp_value_ = new IR::StmWrapper(new IR::Seq(condition->ToCond(ltrue, lfalse), suffix));
 }

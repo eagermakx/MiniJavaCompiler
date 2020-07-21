@@ -10,6 +10,8 @@
 IR::Frame::Frame(Symbol method) : method(std::move(method)) {
   StartScope();
   frame_pointer = new AbsMemPtr();
+  return_value_address = new FrameMemPtr(frame_pointer, 2);
+  return_address = new FrameMemPtr(frame_pointer, 1);
 }
 
 IR::MemPtr *IR::Frame::GetRetValueAddress() const {

@@ -13,6 +13,28 @@ Visitor::PrintIR::PrintIR(const std::string &filename) {
   GraphPrologue();
 }
 
+std::string repr(BinaryOpType o) {
+  switch (o) {
+    case BinaryOpType::PLUS: return "+";
+    case BinaryOpType::MINUS: return "-";
+    case BinaryOpType::MUL: return "*";
+    case BinaryOpType::DIV: return "/";
+    case BinaryOpType::AND: return "and";
+    case BinaryOpType::OR: return "or";
+  }
+}
+
+std::string repr(LogicOpType o) {
+  switch (o) {
+    case LogicOpType::E: return "==";
+    case LogicOpType::NE: return "!=";
+    case LogicOpType::GE: return ">=";
+    case LogicOpType::GT: return ">";
+    case LogicOpType::LE: return "<=";
+    case LogicOpType::LT: return "<";
+  }
+}
+
 void Visitor::PrintIR::GraphPrologue() {
   const char *prologue = "digraph AST {"
                          "\tnode [ shape = rectangle ];"
@@ -63,7 +85,7 @@ int Visitor::PrintIR::CreateNodeAndLink(const std::string &label) {
 }
 
 void Visitor::PrintIR::Visit(IR::Binop *binop) {
-  int node = CreateNodeAndLink("BINOP");
+  int node = CreateNodeAndLink("Binop(" + repr(binop->o) + ")");
   PushNode(node);
   binop->lhs->Accept(this);
   binop->rhs->Accept(this);
@@ -71,7 +93,10 @@ void Visitor::PrintIR::Visit(IR::Binop *binop) {
 }
 
 void Visitor::PrintIR::Visit(IR::Call *call) {
-  CreateNodeAndLink("Call to " + call->function.ToString());
+  int node = CreateNodeAndLink("Call to " + call->function.ToString());
+  PushNode(node);
+  call->args->Accept(this);
+  PopNode();
 }
 
 void Visitor::PrintIR::Visit(IR::CJump *cjump) {
@@ -79,13 +104,16 @@ void Visitor::PrintIR::Visit(IR::CJump *cjump) {
   PushNode(node);
   
   cjump->lhs->Accept(this);
+  
+  CreateNodeAndLink(repr(cjump->o));
+  
   cjump->rhs->Accept(this);
   
   PopNode();
 }
 
 void Visitor::PrintIR::Visit(IR::Const *cnst) {
-  CreateNodeAndLink("Const(" + std::to_string(cnst->val_) + ")");
+  CreateNodeAndLink(std::to_string(cnst->val_));
 }
 
 void Visitor::PrintIR::Visit(IR::Eseq *eseq) {
@@ -108,10 +136,14 @@ void Visitor::PrintIR::Visit(IR::Exp *exp) {
 void Visitor::PrintIR::Visit(IR::ExpList *exp_list) {
   int node = CreateNodeAndLink("ExpList");
   PushNode(node);
-  for (auto& exp : exp_list->list) {
-    exp->Accept(this);
+  
+  if (!exp_list->list.empty()) {
+    for (auto &exp : exp_list->list) {
+      exp->Accept(this);
+    }
+  } else {
+    CreateNodeAndLink("EMPTY");
   }
-  PopNode();
 }
 
 void Visitor::PrintIR::Visit(IR::Jump *jump) {
@@ -126,8 +158,9 @@ void Visitor::PrintIR::Visit(IR::Mem *mem) {
 }
 
 void Visitor::PrintIR::Visit(IR::Move *move) {
-  int node = CreateNodeAndLink("Move");
+  int node = CreateNodeAndLink("Move(->)");
   PushNode(node);
+  
   move->from_->Accept(this);
   move->to_->Accept(this);
   PopNode();
