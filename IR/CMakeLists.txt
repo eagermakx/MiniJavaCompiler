@@ -1,0 +1,42 @@
+set(
+        IR_SOURCES
+        BaseExp.h
+        BaseStm.h
+        Binop.h
+        Call.h
+        CJump.h
+        Const.h
+        Eseq.h
+        Exp.h
+        Jump.h
+        SetLabel.h
+        Mem.h
+        Move.h
+        Name.h
+        Seq.h
+        TempExp.h
+        wrappers/ExpWrapper.cpp
+        wrappers/ExpWrapper.h
+        wrappers/cond/And.cpp
+        wrappers/cond/And.h
+        wrappers/cond/BaseCondWrapper.cpp
+        wrappers/cond/BaseCondWrapper.h
+        wrappers/cond/And.cpp
+        wrappers/cond/And.h
+        wrappers/cond/Or.cpp
+        wrappers/cond/Or.h
+        wrappers/cond/OrderRelation.cpp
+        wrappers/cond/OrderRelation.h
+        generators/Label.cpp
+        generators/Label.h
+        generators/Temp.cpp
+        generators/Temp.h
+        types/BinaryOp.h
+        types/BinaryOp.cpp
+        types/LogicOpType.cpp
+        types/LogicOpType.h
+        ExpList.h
+        ExpList.cpp wrappers/cond/Not.cpp wrappers/cond/Not.h ../Visitor/IRTranslator.cpp ../Visitor/IRTranslator.h calls/Frame.cpp calls/Frame.h calls/MemPtr.cpp calls/MemPtr.h calls/RegisterMemPtr.cpp calls/RegisterMemPtr.h calls/FrameMemPtr.cpp calls/FrameMemPtr.h Visitors/PrintIR.cpp Visitors/PrintIR.h Visitors/Base.h IRBaseNode.h calls/AbsMemPtr.cpp calls/AbsMemPtr.h Visitors/CanonVisitor.cpp Visitors/CanonVisitor.h Visitors/NodeTraits.cpp Visitors/NodeTraits.h StmList.cpp StmList.h Visitors/Linearizer.cpp Visitors/Linearizer.h Visitors/DoubleCallElimination.cpp Visitors/DoubleCallElimination.h)
+
+include_directories(${PROJECT_SOURCE_DIR})
+add_library(IR_LIB ${IR_SOURCES})

@@ -266,7 +266,7 @@ void Visitor::IRTranslator::Visit(Stmt::ExprStmt *stmt_expr) {
   temp_value_ = new IR::StmWrapper(Translate(stmt_expr->expr)->ToStm());
 }
 
-IRMapping Visitor::IRTranslator::GetMapping() {
+IRMapping& Visitor::IRTranslator::GetMapping() {
   return method_trees_;
 }
 

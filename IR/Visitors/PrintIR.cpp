@@ -144,6 +144,8 @@ void Visitor::PrintIR::Visit(IR::ExpList *exp_list) {
   } else {
     CreateNodeAndLink("EMPTY");
   }
+  
+  PopNode();
 }
 
 void Visitor::PrintIR::Visit(IR::Jump *jump) {

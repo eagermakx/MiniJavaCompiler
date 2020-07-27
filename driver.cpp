@@ -7,6 +7,10 @@
 #include <log.h>
 
 #include <IR/Visitors/PrintIR.h>
+#include <IR/Visitors/CanonVisitor.h>
+#include <IR/Visitors/Linearizer.h>
+#include <IR/Visitors/DoubleCallElimination.h>
+#include <IR/StmList.h>
 #include <Visitor/IRTranslator.h>
 
 Driver::Driver() :
@@ -63,9 +67,36 @@ int Driver::Run() {
   return interpreter.Run(program);
 }
 
-void Driver::PrintIR(const std::string &filename) {
+void Driver::PrintIR(const std::string &filename, bool canonize) {
   Visitor::IRTranslator translator;
   translator.Run(program);
+  
+  if (canonize) {
+    IR::Visitor::DoubleCallElimination eliminator;
+    eliminator.Run(translator.GetMapping());
+  
+    IR::Visitor::CanonVisitor canonizer;
+    canonizer.Run(translator.GetMapping());
+  
+    /*
+    const int kNumIter = 4;
+    
+    IR::StmList list;
+    // auto s = new IR::SetLabel(IR::Label());
+    
+    for (int i = 0; i < kNumIter; ++i) {
+      list.AddStm(new IR::SetLabel(IR::Label()));
+    }
+    
+    IRMapping map;
+    map.emplace("list_example", list.Tree());
+    
+    printer.Run(map);
+    */
+  
+    IR::Visitor::Linearizer linearizer;
+    linearizer.Run(translator.GetMapping());
+  }
   
   IR::Visitor::PrintIR printer(filename);
   printer.Run(translator.GetMapping());

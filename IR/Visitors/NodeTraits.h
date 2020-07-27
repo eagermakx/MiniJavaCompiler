@@ -13,13 +13,33 @@
 namespace IR {
 
 namespace Visitor {
-class PrintIR : public IR::Visitor::Base {
+
+/**
+ * Eliminates ESEQ nodes of the IR tree
+ */
+class NodeTraits : public IR::Visitor::Base {
  public:
-  explicit PrintIR(const std::string &filename);
+  NodeTraits() = default;
+  ~NodeTraits() = default;
   
-  void Run(IRMapping method_trees);
+  enum class NodeType {
+    Binop,
+    Call,
+    CJump,
+    Const,
+    Eseq,
+    Exp,
+    ExpList,
+    Jump,
+    Mem,
+    Move,
+    Name,
+    Seq,
+    SetLabel,
+    TempExp,
+    ERR
+  };
   
-  ~PrintIR();
   void Visit(IR::Binop *binop) override;
   void Visit(IR::Call *call) override;
   void Visit(IR::CJump *cjump) override;
@@ -34,24 +54,14 @@ class PrintIR : public IR::Visitor::Base {
   void Visit(IR::Seq *seq) override;
   void Visit(IR::SetLabel *set_label) override;
   void Visit(IR::TempExp *temp_expr) override;
+  
+  NodeType Type(IR::BaseNode* node);
  
- private:
-  void GraphPrologue();
-  void GraphEpilogue();
+ public:
   
-  void PrintEdge(int from, int to);
-  void PrintNode(int node, const std::string &label);
-  int CreateNodeAndLink(const std::string &label);
-  int NewNode();
-  
-  void PushNode(int node);
-  void PopNode();
-  int Parent();
-  
-  int max_node = 0;
-  std::stack<int> node_stack_;
-  std::ofstream stream_;
+  NodeType latest_type = NodeType::ERR;
 };
+  
 }
-
+  
 }

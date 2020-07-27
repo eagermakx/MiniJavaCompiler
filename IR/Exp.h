@@ -9,7 +9,7 @@ class Exp : public BaseStm {
   
   void Accept(IR::Visitor::Base *visitor) override { visitor->Visit(this); }
  
- private:
+ public:
   BaseExp* exp_;
 };
 

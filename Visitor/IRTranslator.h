@@ -48,7 +48,7 @@ class IRTranslator : public Visitor::Base {
   void Visit(Stmt::ScopedList* scoped_list) override;
   void Visit(Stmt::ExprStmt* stmt_expr) override;
  
-  IRMapping GetMapping();
+  IRMapping& GetMapping();
   
  private:
   IRMapping method_trees_;
