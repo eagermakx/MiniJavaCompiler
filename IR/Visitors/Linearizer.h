@@ -8,18 +8,24 @@
 #include <fstream>
 #include <stack>
 #include <Visitor/IRTranslator.h>
+#include "IR/StmList.h"
 #include "Base.h"
+#include "NodeTraits.h"
 
 namespace IR {
 
 namespace Visitor {
-class PrintIR : public IR::Visitor::Base {
+
+/**
+ * Transforms arbitrary SEQ chains to a simple list
+ */
+class Linearizer : public IR::Visitor::Base {
  public:
-  explicit PrintIR(const std::string &filename);
+  Linearizer() = default;
+  ~Linearizer() = default;
   
-  void Run(IRMapping method_trees);
+  void Run(IRMapping& method_trees);
   
-  ~PrintIR();
   void Visit(IR::Binop *binop) override;
   void Visit(IR::Call *call) override;
   void Visit(IR::CJump *cjump) override;
@@ -36,22 +42,11 @@ class PrintIR : public IR::Visitor::Base {
   void Visit(IR::TempExp *temp_expr) override;
  
  private:
-  void GraphPrologue();
-  void GraphEpilogue();
+  std::stack<void**> parent_pointer_ref_;
   
-  void PrintEdge(int from, int to);
-  void PrintNode(int node, const std::string &label);
-  int CreateNodeAndLink(const std::string &label);
-  int NewNode();
-  
-  void PushNode(int node);
-  void PopNode();
-  int Parent();
-  
-  int max_node = 0;
-  std::stack<int> node_stack_;
-  std::ofstream stream_;
+  IR::StmList* tos_stm_list_;
 };
+  
 }
-
+  
 }

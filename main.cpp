@@ -21,12 +21,15 @@ int main(int argc, char** argv) {
     bool print_ir = false;
     std::string ast_output;
     std::string ir_output;
+    bool canonize = false;
 
     for (int i = 2; i < argc; ++i) {
         if (argv[i] == std::string("-p")) {
           driver.trace_parsing = true;
         } else if (argv[i] == std::string("-s")) {
           driver.trace_scanning = true;
+        } else if (argv[i] == std::string("-c")) {
+          canonize = true;
         } else if (argv[i] == std::string("--ast")) {
           print_ast = true;
           ast_output = argv[i + 1];
@@ -50,7 +53,7 @@ int main(int argc, char** argv) {
         
         if (print_ir) {
           LOG("[*] Processing IR... ");
-          driver.PrintIR(ir_output);
+          driver.PrintIR(ir_output, canonize);
         }
         
         result = 0;

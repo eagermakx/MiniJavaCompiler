@@ -4,6 +4,7 @@
 
 #pragma once
 #include <Type/Type.h>
+#include <memory>
 
 class Object {
  public:

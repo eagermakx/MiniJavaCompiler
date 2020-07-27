@@ -1,5 +1,5 @@
 //
-// Created by Igor Maximov on 26.07.2020.
+// Created by Igor Maximov on 28.07.2020.
 //
 
 #pragma once
@@ -8,18 +8,24 @@
 #include <fstream>
 #include <stack>
 #include <Visitor/IRTranslator.h>
+#include "IR/StmList.h"
 #include "Base.h"
+#include "NodeTraits.h"
 
 namespace IR {
 
 namespace Visitor {
-class PrintIR : public IR::Visitor::Base {
+
+/**
+ * Eliminates CALL nodes on both sides of a binary expression node
+ */
+class DoubleCallElimination : public IR::Visitor::Base {
  public:
-  explicit PrintIR(const std::string &filename);
+  DoubleCallElimination() = default;
+  ~DoubleCallElimination() = default;
   
-  void Run(IRMapping method_trees);
+  void Run(IRMapping& method_trees);
   
-  ~PrintIR();
   void Visit(IR::Binop *binop) override;
   void Visit(IR::Call *call) override;
   void Visit(IR::CJump *cjump) override;
@@ -36,22 +42,10 @@ class PrintIR : public IR::Visitor::Base {
   void Visit(IR::TempExp *temp_expr) override;
  
  private:
-  void GraphPrologue();
-  void GraphEpilogue();
-  
-  void PrintEdge(int from, int to);
-  void PrintNode(int node, const std::string &label);
-  int CreateNodeAndLink(const std::string &label);
-  int NewNode();
-  
-  void PushNode(int node);
-  void PopNode();
-  int Parent();
-  
-  int max_node = 0;
-  std::stack<int> node_stack_;
-  std::ofstream stream_;
+  static void WrapCall(IR::BaseExp** node);
+  IR::Visitor::NodeTraits traits_;
 };
+
 }
 
 }
