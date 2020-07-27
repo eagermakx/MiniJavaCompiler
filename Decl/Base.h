@@ -5,6 +5,7 @@
 #pragma once
 #include "BaseNode.h"
 #include "SymbolTable/Symbol.h"
+#include <cassert>
 
 namespace Decl {
 
