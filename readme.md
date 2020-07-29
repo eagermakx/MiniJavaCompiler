@@ -2,10 +2,10 @@
 
 #### `test.py` 
 `Usage: 
-  test.py [ast/ir] [-c]
-	ast - render abstract syntax tree images
-	ir - render intermediate repreentation tree images
-	-c - canonize IR tree beforehand`
+  test.py [ast/ir] [-c] <br>
+	ast - render abstract syntax tree images <br>
+	ir - render intermediate repreentation tree images <br>
+	-c - canonize IR tree beforehand` <br>
 
 * New feature: canonize IR tree (eliminate double call in binary expressions, linearize SEQ chains and eliminate ESEQ nodes
 * New feature: generate and render IR (intermediate representation) with `test.py ir` command from root dir
