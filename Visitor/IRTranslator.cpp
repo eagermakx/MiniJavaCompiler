@@ -95,7 +95,7 @@ void Visitor::IRTranslator::Visit(Expr::Id *rvalue) {
 }
 
 void Visitor::IRTranslator::Visit(Expr::This *this_expr) {
-
+  temp_value_ = new IR::ExpWrapper(current_frame_->GetThis()->ToExp());
 }
 
 void Visitor::IRTranslator::Visit(Expr::UnaryOp *unary_op) {

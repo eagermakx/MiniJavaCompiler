@@ -12,6 +12,7 @@ IR::Frame::Frame(Symbol method) : method(std::move(method)) {
   frame_pointer = new AbsMemPtr();
   return_value_address = new FrameMemPtr(frame_pointer, 2);
   return_address = new FrameMemPtr(frame_pointer, 1);
+  this_object = new FrameMemPtr(frame_pointer, 3);
 }
 
 IR::MemPtr *IR::Frame::GetRetValueAddress() const {
@@ -55,4 +56,8 @@ void IR::Frame::AddSymbolToCurrentScope(Symbol symbol) {
 
 IR::Frame::Scope IR::Frame::GetCurrentScope() {
   return scopes_.top();
+}
+
+IR::MemPtr *IR::Frame::GetThis() const {
+  return this_object;
 }
