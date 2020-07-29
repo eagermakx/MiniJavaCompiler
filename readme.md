@@ -1,8 +1,8 @@
 ### Mini Java Compiler ###
 
 #### `test.py` 
-`Usage: 
-  test.py [ast/ir] [-c] <br>
+`Usage: ` <br/>
+  `test.py [ast/ir] [-c]` <br/>
 	ast - render abstract syntax tree images <br>
 	ir - render intermediate repreentation tree images <br>
 	-c - canonize IR tree beforehand` <br>
