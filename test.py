@@ -8,7 +8,7 @@ tests = ['2+2', '2+2_var', 'call_on_temp', 'compare', 'fac', \
  		 'println', 'scopes', 'shadowed_modified', \
  		 'simple_call', 'two_classes_simple', 'two_classes']
 
-ir_tests = ['if_a', 'if_test']
+ir_tests = ['if_a', 'if_test', 'complex']
 
 failing_tests = ['undecl_var', 'local_scope']
 
@@ -25,17 +25,19 @@ output_dir = "TestOutput"
 
 executable = './bin/jc'
 
-parse_ast_command = "{executable} ./JavaExamples/{test}.java --ast ./{dir}/{test}.dot"
-parse_ir_command = "{executable} ./JavaExamples/{test}.java --ir ./{dir}/{test}.dot"
+flags = ''
+
+parse_ast_command = "{executable} ./JavaExamples/{test}.java --ast ./{dir}/{test}.dot {flags}"
+parse_ir_command = "{executable} ./JavaExamples/{test}.java --ir ./{dir}/{test}.dot {flags}"
 
 compile_and_run_command = "{executable} ./JavaExamples/{test}.java"
 render_image_command = "dot -Tpng ./{dir}/{test}.dot -o {dir}/{test}.png"
 
 def parse_ast_cmd(test):
-	return parse_ast_command.format(executable=executable, test=test, dir=output_dir)
+	return parse_ast_command.format(executable=executable, test=test, dir=output_dir, flags=flags)
 
 def parse_ir_cmd(test):
-	return parse_ir_command.format(executable=executable, test=test, dir=output_dir)
+	return parse_ir_command.format(executable=executable, test=test, dir=output_dir, flags=flags)
 
 def render_cmd(test, dir):
 	return render_image_command.format(test=test, dir=dir)
@@ -86,17 +88,26 @@ def main(png_dir, ast=False, ir=False):
 				render_images(test, png_dir)
 
 def usage():
-	print ("\tUsage: test.py [ast/ir]\n")
+	print ("Usage: test.py [ast/ir] [-c]\n" \
+		   "\tast - render abstract syntax tree images\n" \
+		   "\tir - render intermediate repreentation tree images\n" \
+		   "\t-c - canonize IR tree beforehand")
 
 if __name__ == "__main__":
     ast = False
     ir = False
-        
-    if len(sys.argv) > 1:
-        if sys.argv[1] == "ast":
-        	ast = True
-        elif sys.argv[1] == "ir":
-        	ir = True
+    canon = False
+
+    for arg in sys.argv:
+    	if arg == 'ast':
+    		ast = True
+    	elif arg == 'ir':
+    		ir = True
+    	elif arg == '-c':
+    		canon = True
+    	elif arg == '-h' or arg == '--help' or arg == 'help':
+    		usage()
+        	exit()
 
     path = output_dir
     main(path, ast, ir)

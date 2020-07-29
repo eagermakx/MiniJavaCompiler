@@ -70,6 +70,8 @@ void Visitor::CanonVisitor::Visit(IR::Call *call) {
   
   int last_eseq = -1;
   for (int i = 0; i < list->list.size(); ++i) {
+    list->list[i]->Accept(this);
+    
     bool is_eseq = traits_.Type(list->list[i]) == NodeTraits::NodeType::Eseq;
     
     if (is_eseq) {

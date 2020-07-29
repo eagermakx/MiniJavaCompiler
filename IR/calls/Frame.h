@@ -22,6 +22,7 @@ class Frame {
   MemPtr* GetRetValueAddress() const;
   MemPtr* GetFramePointer() const;
   MemPtr* GetAddress(Symbol symbol) const;
+  MemPtr* GetThis() const;
   
   void AddVariable(Symbol symbol);
   
@@ -40,11 +41,12 @@ class Frame {
   MemPtr* frame_pointer = nullptr;
   MemPtr* return_value_address = nullptr;
   MemPtr* return_address = nullptr;
+  MemPtr* this_object = nullptr;
   
   const int word_size = 8;
   const Symbol method;
   
-  int current_offset = 3;
+  int current_offset = 4;
   
   int GetOffset() const;
 };
