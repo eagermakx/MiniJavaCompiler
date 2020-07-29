@@ -2,8 +2,8 @@
 
 #### `test.py` 
 `
-Usage:
-    test.py [ast/ir] [-c]
+Usage:\
+    test.py [ast/ir] [-c]\
     ast - render abstract syntax tree images
     ir - render intermediate repreentation tree images
     -c - canonize IR tree beforehand`
