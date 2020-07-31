@@ -36,7 +36,7 @@ set(
         types/LogicOpType.cpp
         types/LogicOpType.h
         ExpList.h
-        ExpList.cpp wrappers/cond/Not.cpp wrappers/cond/Not.h ../Visitor/IRTranslator.cpp ../Visitor/IRTranslator.h calls/Frame.cpp calls/Frame.h calls/MemPtr.cpp calls/MemPtr.h calls/RegisterMemPtr.cpp calls/RegisterMemPtr.h calls/FrameMemPtr.cpp calls/FrameMemPtr.h Visitors/PrintIR.cpp Visitors/PrintIR.h Visitors/Base.h IRBaseNode.h calls/AbsMemPtr.cpp calls/AbsMemPtr.h Visitors/CanonVisitor.cpp Visitors/CanonVisitor.h Visitors/NodeTraits.cpp Visitors/NodeTraits.h StmList.cpp StmList.h Visitors/Linearizer.cpp Visitors/Linearizer.h Visitors/DoubleCallElimination.cpp Visitors/DoubleCallElimination.h)
+        ExpList.cpp wrappers/cond/Not.cpp wrappers/cond/Not.h ../Visitor/IRTranslator.cpp ../Visitor/IRTranslator.h calls/Frame.cpp calls/Frame.h calls/MemPtr.cpp calls/MemPtr.h calls/RegisterMemPtr.cpp calls/RegisterMemPtr.h calls/FrameMemPtr.cpp calls/FrameMemPtr.h Visitors/PrintIR.cpp Visitors/PrintIR.h Visitors/Base.h IRBaseNode.h calls/AbsMemPtr.cpp calls/AbsMemPtr.h Visitors/CanonVisitor.cpp Visitors/CanonVisitor.h Visitors/NodeTraits.cpp Visitors/NodeTraits.h StmList.cpp StmList.h Visitors/Linearizer.cpp Visitors/Linearizer.h Visitors/DoubleCallElimination.cpp Visitors/DoubleCallElimination.h blocks/Block.cpp blocks/Block.h blocks/Trace.cpp blocks/Trace.h Visitors/BlockBuilder.cpp Visitors/BlockBuilder.h)
 
 include_directories(${PROJECT_SOURCE_DIR})
 add_library(IR_LIB ${IR_SOURCES})
