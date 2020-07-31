@@ -10,6 +10,7 @@
 #include <IR/Visitors/CanonVisitor.h>
 #include <IR/Visitors/Linearizer.h>
 #include <IR/Visitors/DoubleCallElimination.h>
+#include <IR/Visitors/BlockBuilder.h>
 #include <IR/StmList.h>
 #include <Visitor/IRTranslator.h>
 
@@ -96,6 +97,13 @@ void Driver::PrintIR(const std::string &filename, bool canonize) {
   
     IR::Visitor::Linearizer linearizer;
     linearizer.Run(translator.GetMapping());
+  }
+  
+  IR::Visitor::BlockBuilder block_builder;
+  std::vector<IR::Block*> blocks = block_builder.Run(translator.GetMapping());
+  
+  for (auto* block : blocks) {
+    std::cout << block->ToString() << std::endl;
   }
   
   IR::Visitor::PrintIR printer(filename);
