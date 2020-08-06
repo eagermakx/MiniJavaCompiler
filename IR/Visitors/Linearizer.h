@@ -21,10 +21,12 @@ namespace Visitor {
  */
 class Linearizer : public IR::Visitor::Base {
  public:
+  using List = std::unordered_map<std::string, std::vector<IR::BaseStm*>>;
+  
   Linearizer() = default;
   ~Linearizer() = default;
   
-  void Run(IRMapping& method_trees);
+  List Run(IRMapping& method_trees);
   
   void Visit(IR::Binop *binop) override;
   void Visit(IR::Call *call) override;
@@ -40,6 +42,36 @@ class Linearizer : public IR::Visitor::Base {
   void Visit(IR::Seq *seq) override;
   void Visit(IR::SetLabel *set_label) override;
   void Visit(IR::TempExp *temp_expr) override;
+ 
+ private:
+   class Transform : public IR::Visitor::Base {
+    public:
+     Transform() = default;
+     
+     void Run(IRMapping& method_trees);
+  
+     void Visit(Binop *binop) override;
+     void Visit(Call *call) override;
+     void Visit(CJump *cjump) override;
+     void Visit(Const *cnst) override;
+     void Visit(Eseq *eseq) override;
+     void Visit(Exp *exp) override;
+     void Visit(ExpList *exp_list) override;
+     void Visit(Jump *jump) override;
+     void Visit(Mem *mem) override;
+     void Visit(Move *move) override;
+     void Visit(Name *name) override;
+     void Visit(Seq *seq) override;
+     void Visit(SetLabel *set_label) override;
+     void Visit(TempExp *temp_expr) override;
+ 
+    public:
+     Linearizer::List lin_out;
+ 
+    private:
+     std::vector<IR::BaseStm*> stm_list;
+     NodeTraits traits_;
+   };
  
  private:
   std::stack<void**> parent_pointer_ref_;

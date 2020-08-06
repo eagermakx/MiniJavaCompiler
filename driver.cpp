@@ -13,6 +13,7 @@
 #include <IR/Visitors/BlockBuilder.h>
 #include <IR/StmList.h>
 #include <Visitor/IRTranslator.h>
+#include <IR/BasicBlockScheduling.h>
 
 Driver::Driver() :
     trace_parsing(false),
@@ -96,15 +97,26 @@ void Driver::PrintIR(const std::string &filename, bool canonize) {
     */
   
     IR::Visitor::Linearizer linearizer;
-    linearizer.Run(translator.GetMapping());
+    IR::Visitor::Linearizer::List lin_out = linearizer.Run(translator.GetMapping());
+    
+    
+    auto mapping = IR::BasicBlocksSplit(lin_out);
+  
+    for (auto& [label, block] : mapping) {
+      std::cout << block.ToString() << std::endl;
+    }
+    
+    std::cout << "Rescheduled:" << std::endl;
+    
+    std::vector<std::string> method_labels = IR::GetMethodLabels(lin_out);
+    for (auto& block : IR::TraceReschedule(mapping, method_labels)) {
+      std::cout << block.ToString() << std::endl;
+    }
   }
   
-  IR::Visitor::BlockBuilder block_builder;
-  std::vector<IR::Block*> blocks = block_builder.Run(translator.GetMapping());
-  
-  for (auto* block : blocks) {
-    std::cout << block->ToString() << std::endl;
-  }
+  // This is deprecated. Using IR::BasicBlock and BasicBlocksSplit()
+  // --- IR::Visitor::BlockBuilder block_builder;
+  // --- std::vector<IR::Block*> blocks = block_builder.Run(translator.GetMapping());
   
   IR::Visitor::PrintIR printer(filename);
   printer.Run(translator.GetMapping());

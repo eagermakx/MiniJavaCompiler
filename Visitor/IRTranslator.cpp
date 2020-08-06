@@ -251,12 +251,12 @@ void Visitor::IRTranslator::Visit(Stmt::ScopedList *scoped_list) {
   
   temp_value_ = Translate(scoped_list->list);
   
-  std::cout << "[log] Variables to destroy: \n";
+  // std::cout << "[log] Variables to destroy: \n";
   auto variables = current_frame_->GetCurrentScope().vars;
   while (!variables.empty()) {
     auto symbol = variables.top();
     variables.pop();
-    std::cout << symbol.GetLabel() << std::endl;
+    // std::cout << symbol.GetLabel() << std::endl;
   }
   
   current_frame_->ExitScope();
