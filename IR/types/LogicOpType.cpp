@@ -13,4 +13,15 @@ std::string ToString(LogicOpType type) {
   }
 }
 
+std::string AsmRepr(LogicOpType type) {
+  switch (type) {
+    case LogicOpType::E: return "e";
+    case LogicOpType::NE: return "ne";
+    case LogicOpType::GE: return "ge";
+    case LogicOpType::LE: return "le";
+    case LogicOpType::GT: return "gt";
+    case LogicOpType::LT: return "lt";
+  }
+}
+
 }

@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-#define UNREACHABLE(x) std::cerr << "[!] Unreachable code area : " << x << std::endl; exit(1);
+#define UNREACHABLE(x) do { std::cerr << "[!] Unreachable code area : " << x << std::endl; exit(1); } while (false)
 
 #define NO_LOG
 

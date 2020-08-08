@@ -64,3 +64,7 @@ std::string IR::BasicBlock::GetJumpLabel() const {
 bool IR::BasicBlock::IsComplete() const {
   return type_ != BlockType::none;
 }
+
+const std::vector<IR::BaseStm*>& IR::BasicBlock::Stmts() const {
+  return statements_;
+}

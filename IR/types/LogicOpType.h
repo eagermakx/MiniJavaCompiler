@@ -14,5 +14,6 @@ enum class LogicOpType : char {
 };
 
 std::string ToString(LogicOpType type);
+std::string AsmRepr(LogicOpType type);
 
 }

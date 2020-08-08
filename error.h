@@ -26,4 +26,6 @@ const char *compilation_error::what() const noexcept {
 
 #define ERROR(msg, loc) { std::cerr << "[!] " << msg << " at \'" << loc << "\'" << std::endl; exit(1); }
 
+#define FAIL(msg) { std::cerr << "[!] " << msg << std::endl; exit(1); } while (false)
+
 #endif // ERROR_H

@@ -25,6 +25,8 @@ class BasicBlock {
   
   std::string ToString() const;
   std::string GetLabelName() const;
+  
+  const std::vector<IR::BaseStm*>& Stmts() const;
  
  private:
   std::vector<IR::BaseStm *> statements_;

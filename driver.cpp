@@ -14,6 +14,7 @@
 #include <IR/StmList.h>
 #include <Visitor/IRTranslator.h>
 #include <IR/BasicBlockScheduling.h>
+#include <IR/assembly/InstSelection.h>
 
 Driver::Driver() :
     trace_parsing(false),
@@ -109,10 +110,28 @@ void Driver::PrintIR(const std::string &filename, bool canonize) {
     std::cout << "Rescheduled:" << std::endl;
     
     std::vector<std::string> method_labels = IR::GetMethodLabels(lin_out);
-    for (auto& block : IR::TraceReschedule(mapping, method_labels)) {
+    auto reordered = IR::TraceReschedule(mapping, method_labels);
+    
+    for (auto& block : reordered) {
       std::cout << block.ToString() << std::endl;
     }
+  
+    for (auto& block : reordered) {
+      for (auto& stm : block.Stmts()) {
+        for (auto& inst : ASM::SelectInstructions(stm)) {
+          std::cout << inst->assem << " [ ";
+          for (auto& t : inst->def()) {
+            std::cout << t.ToString() << " ";
+          }
+          for (auto& t : inst->use()) {
+            std::cout << t.ToString() << " ";
+          }
+          std::cout << "]\n";
+        }
+      }
+    }
   }
+  
   
   // This is deprecated. Using IR::BasicBlock and BasicBlocksSplit()
   // --- IR::Visitor::BlockBuilder block_builder;

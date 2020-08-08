@@ -6,8 +6,8 @@ namespace IR {
 
 class Temp {
  public:
-  Temp();
   
+  Temp();
   explicit Temp(std::string name);
   
   std::string ToString() const;
