@@ -204,6 +204,7 @@ void MunchSetLabel(IR::SetLabel* s) {
 }
 
 void MunchCJump(IR::CJump* cj) {
+  emit(new ASM::Oper("cmp %s 0", L(Munch(cj->lhs)), empty_list));
   emit(new ASM::Oper("j" + AsmRepr(cj->o) + " " + cj->ltrue.ToString(), empty_list, empty_list, L(cj->ltrue)));
 }
 

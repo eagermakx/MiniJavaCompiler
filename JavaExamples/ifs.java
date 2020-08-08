@@ -4,6 +4,11 @@ class Main {
 		int b;
 		a = 1;
 		b = 2;
-		a = a + b;
+
+		boolean cond;
+		cond = true;
+		if (cond) {
+			b = a;
+		}
 	}
 }

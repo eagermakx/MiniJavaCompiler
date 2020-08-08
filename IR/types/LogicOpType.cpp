@@ -15,8 +15,8 @@ std::string ToString(LogicOpType type) {
 
 std::string AsmRepr(LogicOpType type) {
   switch (type) {
-    case LogicOpType::E: return "e";
-    case LogicOpType::NE: return "ne";
+    case LogicOpType::E: return "z";
+    case LogicOpType::NE: return "nz";
     case LogicOpType::GE: return "ge";
     case LogicOpType::LE: return "le";
     case LogicOpType::GT: return "gt";
