@@ -88,26 +88,26 @@ def main(png_dir, ast=False, ir=False):
 				render_images(test, png_dir)
 
 def usage():
-	print ("Usage: test.py [ast/ir] [-c]\n" \
-		   "\tast - render abstract syntax tree images\n" \
-		   "\tir - render intermediate repreentation tree images\n" \
-		   "\t-c - canonize IR tree beforehand")
+	print("Usage: test.py [ast/ir] [-c]\n" \
+		  "\tast - render abstract syntax tree images\n" \
+		  "\tir - render intermediate repreentation tree images\n" \
+		  "\t-c - canonize IR tree beforehand")
 
 if __name__ == "__main__":
-    ast = False
-    ir = False
-    canon = False
+	ast = False
+	ir = False
+	canon = False
 
-    for arg in sys.argv:
-    	if arg == 'ast':
-    		ast = True
-    	elif arg == 'ir':
-    		ir = True
-    	elif arg == '-c':
-    		canon = True
-    	elif arg == '-h' or arg == '--help' or arg == 'help':
-    		usage()
-        	exit()
+	for arg in sys.argv:
+		if arg == 'ast':
+			ast = True
+		elif arg == 'ir':
+			ir = True
+		elif arg == '-c':
+			canon = True
+		elif arg == '-h' or arg == '--help' or arg == 'help':
+			usage()
+			exit()
 
-    path = output_dir
-    main(path, ast, ir)
+	path = output_dir
+	main(path, ast, ir)

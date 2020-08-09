@@ -207,7 +207,7 @@ void MunchExpList(IR::ExpList* list) {
   
   for (int i = 0; i < list->list.size(); ++i) {
     auto* exp = list->list[i];
-    emit(new ASM::Oper("store [fp + " + std::to_string(i + default_frame_offset) + "] $s", L(Munch(exp)), empty_list));
+    emit(new ASM::Oper("store [%fp + " + std::to_string(i + default_frame_offset) + "] $s", L(Munch(exp)), empty_list));
   }
 }
 
