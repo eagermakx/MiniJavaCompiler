@@ -101,6 +101,10 @@ void IR::Visitor::Linearizer::Visit(IR::SetLabel *set_label) {
 void IR::Visitor::Linearizer::Visit(IR::TempExp *temp_expr) {
 }
 
+void IR::Visitor::Linearizer::Visit(IR::Register *reg) {
+
+}
+
 // Transform class
 
 void IR::Visitor::Linearizer::Transform::Visit(IR::Binop *binop) {
@@ -159,4 +163,8 @@ void IR::Visitor::Linearizer::Transform::Run(IRMapping &method_trees) {
     stmts->Accept(this);
     lin_out.emplace(method_name, std::move(stm_list));
   }
+}
+
+void IR::Visitor::Linearizer::Transform::Visit(Register *reg) {
+
 }

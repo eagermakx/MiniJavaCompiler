@@ -110,3 +110,7 @@ void IR::Visitor::DoubleCallElimination::WrapCall(IR::BaseExp **node) {
   auto e = new IR::Eseq(new IR::Move(temp_exp, *node), temp_exp);
   *node = e;
 }
+
+void IR::Visitor::DoubleCallElimination::Visit(Register *reg) {
+
+}

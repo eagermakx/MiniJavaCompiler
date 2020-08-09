@@ -10,11 +10,11 @@ namespace IR {
 
 class RegisterMemPtr : public MemPtr {
  public:
-  explicit RegisterMemPtr(const Temp& temp);
+  explicit RegisterMemPtr(std::string name) : name_(std::move(name)) {}
   BaseExp* ToExp() override;
  
  private:
-  Temp temp_;
+  std::string name_;
 };
 
 }

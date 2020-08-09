@@ -8,6 +8,7 @@
 #include "Mem.h"
 #include "Call.h"
 #include "Eseq.h"
+#include "Register.h"
 
 #include "BaseStm.h"
 #include "Move.h"

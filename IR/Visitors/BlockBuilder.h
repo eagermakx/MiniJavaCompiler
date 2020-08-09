@@ -31,6 +31,7 @@ class BlockBuilder : public IR::Visitor::Base {
   void Visit(Seq *seq) override;
   void Visit(SetLabel *set_label) override;
   void Visit(TempExp *temp_expr) override;
+  void Visit(Register* reg) override;
  
  private:
   IR::Seq *Finalize(BaseStm *last_stm, const std::string &method_name);

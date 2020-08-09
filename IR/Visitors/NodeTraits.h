@@ -37,6 +37,7 @@ class NodeTraits : public IR::Visitor::Base {
     Seq,
     SetLabel,
     TempExp,
+    Register,
     ERR
   };
   
@@ -54,6 +55,7 @@ class NodeTraits : public IR::Visitor::Base {
   void Visit(IR::Seq *seq) override;
   void Visit(IR::SetLabel *set_label) override;
   void Visit(IR::TempExp *temp_expr) override;
+  void Visit(Register* reg) override;
   
   NodeType Type(IR::BaseNode* node);
  

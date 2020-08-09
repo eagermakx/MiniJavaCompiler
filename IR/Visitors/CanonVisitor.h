@@ -39,6 +39,7 @@ class CanonVisitor : public IR::Visitor::Base {
   void Visit(IR::Seq *seq) override;
   void Visit(IR::SetLabel *set_label) override;
   void Visit(IR::TempExp *temp_expr) override;
+  void Visit(Register* reg) override;
  
  private:
   NodeTraits traits_;

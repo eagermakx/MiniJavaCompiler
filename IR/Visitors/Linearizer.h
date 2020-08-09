@@ -42,6 +42,7 @@ class Linearizer : public IR::Visitor::Base {
   void Visit(IR::Seq *seq) override;
   void Visit(IR::SetLabel *set_label) override;
   void Visit(IR::TempExp *temp_expr) override;
+  void Visit(IR::Register* reg) override;
  
  private:
    class Transform : public IR::Visitor::Base {
@@ -64,6 +65,7 @@ class Linearizer : public IR::Visitor::Base {
      void Visit(Seq *seq) override;
      void Visit(SetLabel *set_label) override;
      void Visit(TempExp *temp_expr) override;
+     void Visit(Register* reg) override;
  
     public:
      Linearizer::List lin_out;

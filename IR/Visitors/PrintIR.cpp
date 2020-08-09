@@ -204,4 +204,8 @@ void Visitor::PrintIR::Run(IRMapping method_trees) {
   }
 }
 
+void Visitor::PrintIR::Visit(Register *reg) {
+  CreateNodeAndLink(reg->name_);
+}
+
 }

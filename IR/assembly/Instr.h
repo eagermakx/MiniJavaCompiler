@@ -21,7 +21,7 @@ class Instr {
   virtual TempList use() const = 0;
   virtual TempList def() const = 0;
   virtual Targets jumps() const = 0;
-  virtual std::string format() const = 0;
+  std::string format() const;
   
  public:
   std::string assem;
@@ -34,7 +34,6 @@ class Oper : public Instr {
   TempList use() const override;
   TempList def() const override;
   Targets jumps() const override;
-  std::string format() const;
  
  private:
   TempList use_;
@@ -49,7 +48,6 @@ class Move : public Instr {
   TempList use() const override;
   TempList def() const override;
   Targets jumps() const override;
-  std::string format() const;
  
  private:
   IR::Temp src;
@@ -63,7 +61,6 @@ class Label : public Instr {
   TempList use() const override;
   TempList def() const override;
   Targets jumps() const override;
-  std::string format() const;
  
  private:
   IR::Label label_;

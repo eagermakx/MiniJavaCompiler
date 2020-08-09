@@ -64,3 +64,7 @@ IR::Visitor::NodeTraits::NodeType IR::Visitor::NodeTraits::Type(IR::BaseNode* no
   node->Accept(this);
   return latest_type;
 }
+
+void IR::Visitor::NodeTraits::Visit(Register *reg) {
+  latest_type = NodeType::Register;
+}

@@ -6,10 +6,11 @@
 #include "error.h"
 #include "FrameMemPtr.h"
 #include "AbsMemPtr.h"
+#include "RegisterMemPtr.h"
 
 IR::Frame::Frame(Symbol method) : method(std::move(method)) {
   StartScope();
-  frame_pointer = new AbsMemPtr();
+  frame_pointer = new RegisterMemPtr("%fp");
   return_value_address = new FrameMemPtr(frame_pointer, 2);
   return_address = new FrameMemPtr(frame_pointer, 1);
   this_object = new FrameMemPtr(frame_pointer, 3);

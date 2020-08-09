@@ -4,10 +4,8 @@
 
 #include <IR/TempExp.h>
 #include "RegisterMemPtr.h"
-
-IR::RegisterMemPtr::RegisterMemPtr(const Temp &temp) : temp_(temp) {
-}
+#include <IR/Register.h>
 
 IR::BaseExp *IR::RegisterMemPtr::ToExp() {
-  return new IR::TempExp(temp_);
+  return new Register(name_);
 }

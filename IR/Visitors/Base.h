@@ -25,6 +25,7 @@ class Base {
   virtual void Visit(Seq* seq) = 0;
   virtual void Visit(SetLabel* set_label) = 0;
   virtual void Visit(TempExp* temp_expr) = 0;
+  virtual void Visit(Register* reg) = 0;
 };
 }
 

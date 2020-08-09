@@ -81,22 +81,6 @@ void Driver::PrintIR(const std::string &filename, bool canonize) {
     IR::Visitor::CanonVisitor canonizer;
     canonizer.Run(translator.GetMapping());
   
-    /*
-    const int kNumIter = 4;
-    
-    IR::StmList list;
-    // auto s = new IR::SetLabel(IR::Label());
-    
-    for (int i = 0; i < kNumIter; ++i) {
-      list.AddStm(new IR::SetLabel(IR::Label()));
-    }
-    
-    IRMapping map;
-    map.emplace("list_example", list.Tree());
-    
-    printer.Run(map);
-    */
-  
     IR::Visitor::Linearizer linearizer;
     IR::Visitor::Linearizer::List lin_out = linearizer.Run(translator.GetMapping());
     
@@ -115,27 +99,17 @@ void Driver::PrintIR(const std::string &filename, bool canonize) {
     for (auto& block : reordered) {
       std::cout << block.ToString() << std::endl;
     }
+    
+    std::cout << "\n=== Assembly ===\n";
   
     for (auto& block : reordered) {
       for (auto& stm : block.Stmts()) {
         for (auto& inst : ASM::SelectInstructions(stm)) {
-          std::cout << inst->assem << " [ ";
-          for (auto& t : inst->def()) {
-            std::cout << t.ToString() << " ";
-          }
-          for (auto& t : inst->use()) {
-            std::cout << t.ToString() << " ";
-          }
-          std::cout << "]\n";
+          std::cout << inst->format() << std::endl;
         }
       }
     }
   }
-  
-  
-  // This is deprecated. Using IR::BasicBlock and BasicBlocksSplit()
-  // --- IR::Visitor::BlockBuilder block_builder;
-  // --- std::vector<IR::Block*> blocks = block_builder.Run(translator.GetMapping());
   
   IR::Visitor::PrintIR printer(filename);
   printer.Run(translator.GetMapping());

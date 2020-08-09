@@ -307,5 +307,9 @@ void Visitor::CanonVisitor::Run(IRMapping& method_trees) {
     stmts->Accept(this);
   }
 }
+
+void Visitor::CanonVisitor::Visit(Register *reg) {
+
+}
   
 }

@@ -139,3 +139,7 @@ IR::Seq * IR::Visitor::BlockBuilder::Finalize(BaseStm *last_stm, const std::stri
 IR::SetLabel *IR::Visitor::BlockBuilder::BlockSetLabelStm(IR::Seq *block_start) {
   return dynamic_cast<IR::SetLabel*>(block_start->first_);
 }
+
+void IR::Visitor::BlockBuilder::Visit(Register *reg) {
+
+}

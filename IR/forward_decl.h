@@ -10,6 +10,7 @@ class Mem;
 class Call;
 class Eseq;
 class TempExp;
+class Register;
 
 class BaseStm;
 class Move;
